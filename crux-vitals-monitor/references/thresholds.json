@@ -1,0 +1,8 @@
+{
+  "description": "Google's official Core Web Vitals p75 thresholds. good = <= good bound; poor = > poor bound; between = needs_improvement. LCP/INP in milliseconds, CLS unitless.",
+  "thresholds": {
+    "LCP": { "good": 2500, "poor": 4000, "unit": "ms" },
+    "INP": { "good": 200, "poor": 500, "unit": "ms" },
+    "CLS": { "good": 0.1, "poor": 0.25, "unit": "score" }
+  }
+}

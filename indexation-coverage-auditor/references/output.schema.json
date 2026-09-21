@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Indexation Coverage Auditor Output",
+  "type": "object",
+  "required": ["status", "summary", "gaps", "ledger"],
+  "properties": {
+    "status": { "enum": ["ok", "insufficient", "error"] },
+    "summary": {
+      "type": "object",
+      "required": ["total_urls", "sitemap_urls", "coverage_source", "class_distribution"],
+      "properties": {
+        "total_urls": { "type": "integer" },
+        "sitemap_urls": { "type": "integer" },
+        "crawled_urls": { "type": "integer" },
+        "urls_with_traffic": { "type": "integer" },
+        "coverage_source": { "enum": ["inspection", "file", "none"] },
+        "coverage_urls_known": { "type": "integer" },
+        "inspect_quota_capped": { "type": "boolean" },
+        "class_distribution": { "type": "object", "additionalProperties": { "type": "integer" } }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["cause", "count", "likely_fix"],
+        "properties": {
+          "cause": { "type": "string" },
+          "count": { "type": "integer" },
+          "example_urls": { "type": "array", "items": { "type": "string" } },
+          "likely_fix": { "type": "string" }
+        }
+      }
+    },
+    "ledger": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "in_sitemap", "class", "cause"],
+        "properties": {
+          "url": { "type": "string" },
+          "in_sitemap": { "type": "boolean" },
+          "crawl_status": { "type": ["integer", "null"] },
+          "internal_links": { "type": ["integer", "null"] },
+          "indexable": { "type": ["boolean", "null"] },
+          "in_index": { "type": ["boolean", "null"] },
+          "coverage_state": { "type": ["string", "null"] },
+          "clicks": { "type": "number" },
+          "class": { "type": "string" },
+          "cause": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}

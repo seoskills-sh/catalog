@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Multi-Location NAP Consistency Crawler Output",
+  "type": "object",
+  "required": ["status", "results"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "locations_audited": { "type": "integer" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["location_id"],
+        "properties": {
+          "location_id": { "type": "string" },
+          "consistency": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+          "inconsistent_sources": { "type": "array", "items": { "$ref": "#/$defs/check" } },
+          "unverifiable_sources": { "type": "array", "items": { "type": "string" } },
+          "missing_citations": { "type": "array", "items": { "type": "string" } },
+          "all_checks": { "type": "array", "items": { "$ref": "#/$defs/check" } }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  },
+  "$defs": {
+    "check": {
+      "type": "object",
+      "required": ["url", "extraction"],
+      "properties": {
+        "url": { "type": "string" },
+        "extraction": { "enum": ["ok", "failed", "unverifiable"] },
+        "source_type": { "enum": ["jsonld", "regex"] },
+        "inconsistent": { "type": "boolean" },
+        "fields": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "status": { "enum": ["match", "mismatch", "missing"] },
+              "canonical": { "type": ["string", "null"] },
+              "found_raw": { "type": ["string", "null"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ASO Competitor Keyword Gap Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "country": { "type": "string" },
+    "keyword_source": { "enum": ["aso_api", "derived_metadata"] },
+    "target": {
+      "type": "object",
+      "properties": {
+        "app_id": { "type": "string" },
+        "title": { "type": ["string", "null"] },
+        "keyword_count": { "type": "integer" },
+        "category_rank": { "type": ["integer", "null"] }
+      }
+    },
+    "competitors": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/competitor" }
+    },
+    "keyword_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["term", "competitors_ranking"],
+        "properties": {
+          "term": { "type": "string" },
+          "competitors_ranking": { "type": "integer" },
+          "avg_competitor_rank": { "type": ["number", "null"] },
+          "you_rank": { "type": ["integer", "null"] }
+        }
+      }
+    },
+    "overlaps": { "type": "array", "items": { "type": "string" } },
+    "unique_to_you": { "type": "array", "items": { "type": "string" } },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "snapshot": {
+      "type": "object",
+      "description": "Persist and pass back as previous. apps: id -> profile with metadata + keyword ranks.",
+      "properties": {
+        "country": { "type": "string" },
+        "apps": { "type": "object", "additionalProperties": { "type": "object" } }
+      }
+    },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "$defs": {
+    "competitor": {
+      "type": "object",
+      "required": ["app_id", "status"],
+      "properties": {
+        "app_id": { "type": "string" },
+        "status": { "enum": ["ok", "not_found"] },
+        "title": { "type": ["string", "null"] },
+        "subtitle": { "type": ["string", "null"] },
+        "primary_genre": { "type": ["string", "null"] },
+        "category_rank": { "type": ["integer", "null"] },
+        "keyword_count": { "type": "integer" },
+        "baseline": { "type": "boolean" },
+        "metadata_changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": { "type": "string" },
+              "old": {},
+              "new": {}
+            }
+          }
+        },
+        "rank_shifts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "keyword": { "type": "string" },
+              "old_rank": { "type": ["integer", "null"] },
+              "new_rank": { "type": ["integer", "null"] },
+              "delta": { "type": ["integer", "null"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}

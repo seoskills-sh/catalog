@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "N-gram SERP Intent Clusterer Output",
+  "type": "object",
+  "required": ["status", "clusters"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "serp_provider": { "type": "string" },
+    "keyword_count": { "type": "integer" },
+    "cluster_count": { "type": "integer" },
+    "partial": { "type": "integer" },
+    "clusters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["keywords", "size", "intent"],
+        "properties": {
+          "keywords": { "type": "array", "items": { "type": "string" } },
+          "size": { "type": "integer" },
+          "intent": { "enum": ["transactional", "commercial", "informational", "navigational"] },
+          "canonical_target": { "type": ["string", "null"] },
+          "owns_target": { "type": "boolean" },
+          "low_confidence": { "type": "boolean" }
+        }
+      }
+    },
+    "skipped": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": { "keyword": { "type": "string" }, "reason": { "type": "string" } }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

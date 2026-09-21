@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Screaming Frog Warehouse Loader Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "baseline", "no_data", "error"] },
+    "run_id": { "type": "string" },
+    "schema_version": { "type": "integer" },
+    "dialect": { "enum": ["bigquery", "postgres"] },
+    "truncated": { "type": "boolean" },
+    "sources_used": {
+      "type": "object",
+      "description": "logical export name -> CSV basename actually consumed",
+      "additionalProperties": { "type": "string" }
+    },
+    "inlinks_enriched": { "type": "boolean" },
+    "totals": {
+      "type": "object",
+      "properties": {
+        "urls_normalized": { "type": "integer" },
+        "columns": { "type": "integer" }
+      }
+    },
+    "diff": {
+      "type": "object",
+      "required": ["new", "changed", "removed", "unchanged"],
+      "properties": {
+        "new": { "type": "integer" },
+        "changed": { "type": "integer" },
+        "removed": { "type": "integer" },
+        "unchanged": { "type": "integer" },
+        "new_urls": { "type": "array", "items": { "type": "string" } },
+        "changed_urls": { "type": "array", "items": { "type": "string" } },
+        "removed_urls": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "incremental_rows": { "type": "integer" },
+    "ddl": { "type": "string" },
+    "merge_sql": { "type": "string" },
+    "load": {
+      "type": "object",
+      "properties": {
+        "attempted": { "type": "boolean" },
+        "target": { "type": "string" },
+        "rows_loaded": { "type": "integer" },
+        "rows_failed": { "type": "integer" },
+        "load_truncated": { "type": "boolean" },
+        "table": { "type": "string" }
+      }
+    },
+    "sample_rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": { "type": "string" },
+          "status_code": { "type": ["integer", "null"] },
+          "indexability": { "type": ["string", "null"] },
+          "row_hash": { "type": "string" },
+          "present": { "type": "boolean" }
+        }
+      }
+    },
+    "row_hashes": {
+      "type": "object",
+      "description": "url -> sha1 row hash. Persist and pass back as the next run's previous.",
+      "additionalProperties": { "type": "string" }
+    },
+    "reason": { "type": "string" },
+    "sources": { "type": "array", "items": { "type": "string" } },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}

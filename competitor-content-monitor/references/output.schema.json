@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Competitor Content Cadence Monitor Output",
+  "type": "object",
+  "required": ["status", "results", "snapshots"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "competitors_monitored": { "type": "integer" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["domain", "status"],
+        "properties": {
+          "domain": { "type": "string" },
+          "status": { "enum": ["ok", "baseline", "sitemap_unreachable"] },
+          "url_count": { "type": "integer" },
+          "update_detection": { "type": "boolean" },
+          "new_count": { "type": "integer" },
+          "updated_count": { "type": "integer" },
+          "removed_count": { "type": "integer" },
+          "new_urls": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": { "type": "string" },
+                "title": { "type": "string" },
+                "date_published": { "type": ["string", "null"] },
+                "topic": { "type": "string" }
+              }
+            }
+          },
+          "updated_urls": { "type": "array", "items": { "type": "string" } },
+          "removed_urls": { "type": "array", "items": { "type": "string" } },
+          "topic_distribution": { "type": "object", "additionalProperties": { "type": "integer" } }
+        }
+      }
+    },
+    "snapshots": {
+      "type": "object",
+      "description": "competitor -> {url: lastmod}. Persist and pass back as previous.snapshots.",
+      "additionalProperties": { "type": "object", "additionalProperties": { "type": ["string", "null"] } }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

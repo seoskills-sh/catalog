@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GSC Cannibalization Analyzer Output",
+  "type": "object",
+  "required": ["status", "site_url", "clusters"],
+  "properties": {
+    "status": { "enum": ["ok", "no_data", "error"] },
+    "site_url": { "type": "string" },
+    "date_range": { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 2 },
+    "cluster_count": { "type": "integer", "minimum": 0 },
+    "clusters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["query", "distinct_urls", "estimated_lost_clicks", "severity", "consolidate_to"],
+        "properties": {
+          "query": { "type": "string" },
+          "distinct_urls": { "type": "integer", "minimum": 2 },
+          "position_spread": { "type": "number" },
+          "estimated_lost_clicks": { "type": "number", "minimum": 0 },
+          "severity": { "enum": ["high", "medium", "low"] },
+          "clicks_basis": { "enum": ["clicks", "impressions_only"] },
+          "consolidate_to": { "type": "string", "description": "URL to keep as canonical" },
+          "primary": { "type": "object" },
+          "contenders": { "type": "array", "items": { "type": "object" } }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

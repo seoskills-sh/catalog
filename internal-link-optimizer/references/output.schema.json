@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Internal Link Opportunity Mapper Output",
+  "type": "object",
+  "required": ["status", "recommendations"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "embedding_backend": { "enum": ["openai", "tfidf"] },
+    "pages_crawled": { "type": "integer" },
+    "hit_cap": { "type": "boolean" },
+    "recommendation_count": { "type": "integer" },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "cosine", "priority", "anchor_suggestion"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "cosine": { "type": "number", "minimum": 0, "maximum": 1 },
+          "target_inbound_links": { "type": "integer" },
+          "priority": { "type": "number" },
+          "anchor_suggestion": { "type": "string" },
+          "anchor_confidence": { "enum": ["high", "low"] }
+        }
+      }
+    },
+    "orphan_pages": { "type": "array", "items": { "type": "string" } },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

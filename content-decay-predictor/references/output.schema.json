@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Content Decay Predictor Output",
+  "type": "object",
+  "required": ["status", "decaying"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "site_url": { "type": "string" },
+    "weeks": { "type": "integer" },
+    "horizon_weeks": { "type": "integer" },
+    "urls_analyzed": { "type": "integer" },
+    "truncated": { "type": "boolean" },
+    "decaying_count": { "type": "integer" },
+    "decaying": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "current_weekly_clicks", "peak_to_recent", "projected_additional_loss", "refresh_priority"],
+        "properties": {
+          "url": { "type": "string" },
+          "current_weekly_clicks": { "type": "number" },
+          "peak_weekly_clicks": { "type": "number" },
+          "peak_to_recent": { "type": "number" },
+          "weekly_slope": { "type": "number" },
+          "inflection_week": { "type": "string" },
+          "projected_weekly_at_horizon": { "type": "number" },
+          "projected_additional_loss": { "type": "integer" },
+          "refresh_priority": { "type": "integer" },
+          "seasonal_suspected": { "type": "boolean" }
+        }
+      }
+    },
+    "skipped": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "url": { "type": "string" }, "reason": { "type": "string" } } }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

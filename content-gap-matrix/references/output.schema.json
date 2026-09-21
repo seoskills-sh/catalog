@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Competitor Content Gap Matrix Output",
+  "type": "object",
+  "required": ["status", "gaps"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "target": { "type": "string" },
+    "competitors": { "type": "array", "items": { "type": "string" } },
+    "keywords_evaluated": { "type": "integer" },
+    "partial": { "type": "integer" },
+    "skipped": { "type": "array", "items": { "type": "string" } },
+    "priority_basis": { "enum": ["volume", "no_volume"] },
+    "gap_count": { "type": "integer" },
+    "gaps": { "type": "array", "items": { "$ref": "#/$defs/gap" } },
+    "near_gaps": { "type": "array", "items": { "$ref": "#/$defs/gap" } },
+    "shared_by_all_competitors": { "type": "array", "items": { "type": "string" } },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  },
+  "$defs": {
+    "gap": {
+      "type": "object",
+      "required": ["keyword", "competitor_overlap", "priority"],
+      "properties": {
+        "keyword": { "type": "string" },
+        "volume": { "type": ["integer", "null"] },
+        "competitor_overlap": { "type": "integer" },
+        "competitors_ranking": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "best_competitor_position": { "type": "integer" },
+        "target_position": { "type": ["integer", "null"] },
+        "target_near": { "type": "boolean" },
+        "priority": { "type": "number" }
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BigQuery Log File Analyzer Output",
+  "type": "object",
+  "required": ["status", "verification", "total_googlebot_hits", "status_breakdown", "wasted_paths"],
+  "properties": {
+    "status": { "enum": ["ok", "no_googlebot_traffic", "timeout", "error"] },
+    "verification": { "enum": ["verified_dns", "ua_only"] },
+    "orphan_analysis": { "enum": ["done", "skipped_no_sitemap"] },
+    "window_days": { "type": "integer", "minimum": 1 },
+    "total_googlebot_hits": { "type": "integer", "minimum": 0 },
+    "wasted_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+    "status_breakdown": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["status_class", "hits"],
+        "properties": {
+          "status_class": { "enum": ["2xx", "3xx", "4xx", "5xx", "other"] },
+          "hits": { "type": "integer" }
+        }
+      }
+    },
+    "wasted_paths": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "hits"],
+        "properties": {
+          "path": { "type": "string" },
+          "sample_status": { "type": "integer" },
+          "param_hits": { "type": "integer" },
+          "hits": { "type": "integer" }
+        }
+      }
+    },
+    "orphaned": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "hits"],
+        "properties": { "path": { "type": "string" }, "hits": { "type": "integer" } }
+      }
+    },
+    "under_crawled": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["prefix", "crawl_rate_per_day"],
+        "properties": {
+          "prefix": { "type": "string" },
+          "weight": { "type": "number" },
+          "hits": { "type": "integer" },
+          "crawl_rate_per_day": { "type": "number" }
+        }
+      }
+    },
+    "job_id": { "type": "string" },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}

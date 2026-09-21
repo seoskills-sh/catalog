@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ASO Keyword Field Optimizer Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "insufficient", "error"] },
+    "app_id": { "type": ["string", "null"] },
+    "keyword_char_limit": { "type": "integer", "const": 100 },
+    "locales": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/locale" }
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "locales_optimized": { "type": "integer" },
+        "total_unique_tokens_before": { "type": "integer" },
+        "total_unique_tokens_after": { "type": "integer" },
+        "total_combinations_gained": { "type": "integer" },
+        "cross_locale_duplicates_removed": { "type": "integer" }
+      }
+    },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "$defs": {
+    "locale": {
+      "type": "object",
+      "required": ["locale", "optimized_keyword_field", "char_count"],
+      "properties": {
+        "locale": { "type": "string" },
+        "priority": { "type": "integer" },
+        "optimized_keyword_field": {
+          "type": "string",
+          "description": "Comma-separated, no spaces, <=100 chars."
+        },
+        "char_count": { "type": "integer", "maximum": 100 },
+        "char_budget_remaining": { "type": "integer" },
+        "tokens_placed": { "type": "array", "items": { "type": "string" } },
+        "tokens_dropped": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "token": { "type": "string" },
+              "reason": {
+                "enum": ["stopword", "in_title_subtitle", "duplicate_across_locale", "over_budget"]
+              }
+            }
+          }
+        },
+        "opportunity_captured": { "type": "number" },
+        "opportunity_source": { "enum": ["aso_api", "metadata", "none"] },
+        "coverage": {
+          "type": "object",
+          "properties": {
+            "indexable_tokens_before": { "type": "integer" },
+            "indexable_tokens_after": { "type": "integer" },
+            "est_combinations_before": { "type": "integer" },
+            "est_combinations_after": { "type": "integer" },
+            "combinations_gained": { "type": "integer" }
+          }
+        },
+        "brand_tokens_excluded": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

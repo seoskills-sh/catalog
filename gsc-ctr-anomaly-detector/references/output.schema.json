@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GSC CTR Anomaly Detector Output",
+  "type": "object",
+  "required": ["status", "underperformers"],
+  "properties": {
+    "status": { "enum": ["ok", "no_data", "error"] },
+    "site_url": { "type": "string" },
+    "date_range": { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 2 },
+    "confidence": { "enum": ["normal", "low"] },
+    "rows_evaluated": { "type": "integer" },
+    "underperformers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["query", "url", "position", "actual_ctr", "expected_ctr", "opportunity_clicks"],
+        "properties": {
+          "query": { "type": "string" },
+          "url": { "type": "string" },
+          "position": { "type": "number" },
+          "impressions": { "type": "integer" },
+          "actual_ctr": { "type": "number" },
+          "expected_ctr": { "type": "number" },
+          "robust_z": { "type": "number" },
+          "opportunity_clicks": { "type": "integer" },
+          "cause": { "enum": ["title_mismatch", "serp_feature_suppression", "weak_snippet", "unknown"] }
+        }
+      }
+    },
+    "overperformers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string" },
+          "url": { "type": "string" },
+          "position": { "type": "number" },
+          "actual_ctr": { "type": "number" },
+          "expected_ctr": { "type": "number" },
+          "robust_z": { "type": "number" }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Programmatic Link Mesh Builder Output",
+  "type": "object",
+  "required": ["status", "pages"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "nodes": { "type": "integer" },
+    "edges": { "type": "integer" },
+    "home": { "type": ["string", "null"] },
+    "pagerank_iterations": { "type": "integer" },
+    "pagerank_converged": { "type": "boolean" },
+    "relatedness_method": { "type": "string" },
+    "orphans": { "type": "integer" },
+    "unreachable_pages": { "type": "integer" },
+    "unreachable_money_pages": { "type": "array", "items": { "type": "string" } },
+    "links_proposed": { "type": "integer" },
+    "max_outlinks_cap": { "type": "integer" },
+    "pages": { "type": "array", "items": { "$ref": "#/$defs/page" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "$defs": {
+    "linkproposal": {
+      "type": "object",
+      "properties": {
+        "to": { "type": "string" },
+        "from": { "type": "string" },
+        "reason": {
+          "enum": ["money_page_reachability", "hub_to_orphan_spoke", "spoke_to_hub", "related_entity"]
+        }
+      }
+    },
+    "page": {
+      "type": "object",
+      "required": ["url", "pagerank", "inlinks", "outlinks", "orphan"],
+      "properties": {
+        "url": { "type": "string" },
+        "pagerank": { "type": "number" },
+        "inlinks": { "type": "integer" },
+        "outlinks": { "type": "integer" },
+        "is_money_page": { "type": "boolean" },
+        "orphan": { "type": "boolean" },
+        "reachable_from_home": { "type": "boolean" },
+        "proposed_inlinks": { "type": "array", "items": { "$ref": "#/$defs/linkproposal" } },
+        "proposed_outlinks": { "type": "array", "items": { "$ref": "#/$defs/linkproposal" } },
+        "final_inlinks_after_plan": { "type": "integer" }
+      }
+    }
+  }
+}

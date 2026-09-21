@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GEO Brand Mention Tracker Output",
+  "type": "object",
+  "required": ["status", "brand", "results"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "brand": { "type": "string" },
+    "engines": { "type": "array", "items": { "type": "string" } },
+    "skipped_engines": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "engine": { "type": "string" }, "reason": { "type": "string" } } }
+    },
+    "results": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["presence_rate", "link_rate", "sentiment", "cells"],
+        "properties": {
+          "presence_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+          "link_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+          "sentiment": {
+            "type": "object",
+            "properties": {
+              "positive": { "type": "integer" },
+              "neutral": { "type": "integer" },
+              "negative": { "type": "integer" }
+            }
+          },
+          "accuracy_rate": { "type": ["number", "null"] },
+          "cells": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["prompt", "status"],
+              "properties": {
+                "prompt": { "type": "string" },
+                "status": { "enum": ["ok", "rate_limited", "engine_error", "empty_answer"] },
+                "mentioned": { "type": "boolean" },
+                "linked": { "type": "boolean" },
+                "sentiment": { "enum": ["positive", "neutral", "negative", null] },
+                "evidence": { "type": ["string", "null"] },
+                "citations": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

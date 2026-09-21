@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI Overview Citation Monitor Output",
+  "type": "object",
+  "required": ["status", "results"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "serp_provider": { "type": "string" },
+    "device": { "enum": ["desktop", "mobile"] },
+    "keywords": { "type": "integer" },
+    "aio_trigger_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+    "brand_aio_citation_rate": { "type": ["number", "null"] },
+    "partial": { "type": "integer" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["keyword", "status"],
+        "properties": {
+          "keyword": { "type": "string" },
+          "status": { "enum": ["ok", "serp_error"] },
+          "has_aio": { "type": "boolean" },
+          "citations_available": { "type": "boolean" },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": { "type": "string" },
+                "domain": { "type": "string" },
+                "position": { "type": "integer" }
+              }
+            }
+          },
+          "brand_cited": { "type": "boolean" },
+          "competitors_cited": { "type": "array", "items": { "type": "string" } },
+          "brand_organic_position": { "type": ["integer", "null"] }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

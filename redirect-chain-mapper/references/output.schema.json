@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Redirect Chain Mapper Output",
+  "type": "object",
+  "required": ["status", "results"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "count": { "type": "integer" },
+    "flagged": { "type": "integer" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["input_url", "final_url", "final_status", "hop_count", "hops", "issues"],
+        "properties": {
+          "input_url": { "type": "string" },
+          "final_url": { "type": "string" },
+          "final_status": { "type": "integer" },
+          "hop_count": { "type": "integer" },
+          "hops": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["url", "status"],
+              "properties": {
+                "url": { "type": "string" },
+                "status": { "type": "integer" },
+                "location": { "type": ["string", "null"] }
+              }
+            }
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "enum": ["OK_DIRECT", "CHAIN", "LOOP", "TOO_LONG", "TEMPORARY_REDIRECT",
+                       "MIXED_STATUS", "ENDS_NON_200", "PROTOCOL_DOWNGRADE",
+                       "CANONICAL_MISMATCH", "MALFORMED_REDIRECT", "FETCH_FAILED"]
+            }
+          }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

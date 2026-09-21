@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "App Review Keyword Miner Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "insufficient", "error"] },
+    "reason": { "type": "string" },
+    "app_id": { "type": ["string", "null"] },
+    "package": { "type": ["string", "null"] },
+    "country": { "type": "string" },
+    "reviews_analyzed": { "type": "integer" },
+    "reviews_by_store": {
+      "type": "object",
+      "additionalProperties": { "type": "integer" }
+    },
+    "fetch_notes": {
+      "type": "object",
+      "additionalProperties": { "enum": ["ok", "partial", "empty", "rate_limited"] }
+    },
+    "sentiment_summary": {
+      "type": "object",
+      "properties": {
+        "overall_avg_rating": { "type": "number" },
+        "positive": { "type": "integer" },
+        "negative": { "type": "integer" },
+        "neutral": { "type": "integer" }
+      }
+    },
+    "keyword_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["term", "frequency"],
+        "properties": {
+          "term": { "type": "string" },
+          "ngram": { "enum": ["unigram", "bigram"] },
+          "frequency": { "type": "integer" },
+          "avg_rating": { "type": ["number", "null"] },
+          "dominant_sentiment": { "enum": ["positive", "negative", "neutral"] }
+        }
+      }
+    },
+    "themes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["theme", "mentions"],
+        "properties": {
+          "theme": { "type": "string" },
+          "mentions": { "type": "integer" },
+          "avg_rating": { "type": ["number", "null"] },
+          "rating_impact": { "type": ["number", "null"] },
+          "class": { "enum": ["complaint", "praise", "mixed"] }
+        }
+      }
+    },
+    "feature_requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["request", "count"],
+        "properties": {
+          "request": { "type": "string" },
+          "count": { "type": "integer" },
+          "avg_rating": { "type": ["number", "null"] }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}

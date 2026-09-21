@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Organic Share-of-Voice Tracker Output",
+  "type": "object",
+  "required": ["status", "leaderboard", "sov", "snapshots"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "baseline": { "type": "boolean" },
+    "volume_basis": { "enum": ["search_volume", "uniform"] },
+    "keywords_tracked": { "type": "integer" },
+    "leaderboard": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["domain", "sov"],
+        "properties": {
+          "domain": { "type": "string" },
+          "sov": { "type": "number", "minimum": 0, "maximum": 1 },
+          "sov_delta": { "type": ["number", "null"] }
+        }
+      }
+    },
+    "movers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "domain": { "type": "string" },
+          "sov_delta": { "type": "number" },
+          "top_clusters": { "type": "object", "additionalProperties": { "type": "number" } }
+        }
+      }
+    },
+    "sov": { "type": "object", "additionalProperties": { "type": "number" } },
+    "snapshots": {
+      "type": "object",
+      "description": "keyword -> {domain: position}. Persist and pass back as previous.snapshots.",
+      "additionalProperties": { "type": "object", "additionalProperties": { "type": "integer" } }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

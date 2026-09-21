@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Ahrefs-GSC Backlink Reconciler Output",
+  "type": "object",
+  "required": ["status", "target"],
+  "properties": {
+    "status": { "enum": ["ok", "baseline", "error"] },
+    "target": { "type": "string" },
+    "reconciliation": { "type": "string", "description": "reconciled | skipped_no_csv | empty_export" },
+    "sources": {
+      "type": "object",
+      "properties": {
+        "ahrefs": { "type": "string" },
+        "gsc": { "type": "string" },
+        "semrush": { "type": "string" }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "total_authoritative": { "type": "integer" },
+        "ahrefs_domains": { "type": "integer" },
+        "gsc_domains": { "type": "integer" },
+        "semrush_domains": { "type": "integer" },
+        "overlap_ahrefs_gsc": { "type": "integer" },
+        "overlap_pct": { "type": ["number", "null"] },
+        "ahrefs_unique_pct": { "type": ["number", "null"] },
+        "gsc_unique_pct": { "type": ["number", "null"] }
+      }
+    },
+    "ahrefs_only": { "type": "array", "items": { "type": "string" } },
+    "gsc_only": { "type": "array", "items": { "type": "string" } },
+    "both": { "type": "array", "items": { "type": "string" } },
+    "verify_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["domain", "flag"],
+        "properties": {
+          "domain": { "type": "string" },
+          "flag": { "enum": ["in_gsc_not_ahrefs", "high_dr_not_in_gsc"] },
+          "domain_rating": { "type": ["number", "integer", "null"] },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "gained_domains": { "type": "array", "items": { "type": "string" } },
+    "lost_domains": { "type": "array", "items": { "type": "string" } },
+    "authoritative_sample": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["domain", "sources"],
+        "properties": {
+          "domain": { "type": "string" },
+          "sources": { "type": "array", "items": { "enum": ["ahrefs", "gsc", "semrush"] } },
+          "domain_rating": { "type": ["number", "integer", "null"] },
+          "gsc_linking_pages": { "type": ["integer", "null"] },
+          "first_seen": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "authoritative_domains": {
+      "type": "array",
+      "description": "Full deduped registrable-domain set. Persist and pass back as previous.",
+      "items": { "type": "string" }
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}

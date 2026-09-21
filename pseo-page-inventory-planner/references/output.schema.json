@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Programmatic Page Inventory Planner Output",
+  "type": "object",
+  "required": ["status", "inventory"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "candidates_evaluated": { "type": "integer" },
+    "combinations_truncated": { "type": "boolean" },
+    "demand_source": { "type": "string" },
+    "exists_source": { "enum": ["gsc", "none"] },
+    "no_volume_data": { "type": "integer" },
+    "pages_to_build": { "type": "integer" },
+    "pages_pruned": { "type": "integer" },
+    "pages_deferred": { "type": "integer" },
+    "already_ranking": { "type": "integer" },
+    "projected_monthly_clicks_total": { "type": "integer" },
+    "inventory": { "type": "array", "items": { "$ref": "#/$defs/candidate" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "$defs": {
+    "candidate": {
+      "type": "object",
+      "required": ["keyword", "modifier", "entity", "decision", "viability_score"],
+      "properties": {
+        "keyword": { "type": "string" },
+        "modifier": { "type": "string" },
+        "entity": { "type": "string" },
+        "search_volume": { "type": ["integer", "null"] },
+        "competition_index": { "type": ["number", "null"] },
+        "cpc": { "type": ["number", "null"] },
+        "already_ranking": { "type": "boolean" },
+        "viability_score": { "type": "number" },
+        "projected_position": { "type": ["integer", "null"] },
+        "projected_monthly_clicks": { "type": "integer" },
+        "decision": { "enum": ["build", "skip", "defer", "exists"] },
+        "reason": { "type": "string" }
+      }
+    }
+  }
+}

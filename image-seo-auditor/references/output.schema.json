@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Image SEO Auditor Output",
+  "type": "object",
+  "required": ["status", "results"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "pages_audited": { "type": "integer" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "status", "image_count", "image_score", "images"],
+        "properties": {
+          "url": { "type": "string" },
+          "status": { "const": "ok" },
+          "image_count": { "type": "integer" },
+          "images_with_issues": { "type": "integer" },
+          "image_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["src", "issues"],
+              "properties": {
+                "src": { "type": "string" },
+                "issues": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["code", "severity"],
+                    "properties": {
+                      "code": {
+                        "enum": ["ALT_MISSING", "ALT_EMPTY_NON_DECORATIVE", "ALT_GENERIC",
+                                 "NON_DESCRIPTIVE_FILENAME", "LEGACY_FORMAT", "MISSING_DIMENSIONS",
+                                 "NO_LAZY_LOADING", "OVERSIZE", "DUPLICATE_ALT"]
+                      },
+                      "severity": { "enum": ["critical", "warning", "info"] }
+                    },
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "unreachable": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "url": { "type": "string" }, "http_status": { "type": "integer" } } }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Faceted Navigation Index Planner Output",
+  "type": "object",
+  "required": ["status", "facet_directives"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "urls_in_crawl": { "type": "integer" },
+    "faceted_urls": { "type": "integer" },
+    "crawl_data": { "type": "boolean" },
+    "demand_data": { "type": "boolean" },
+    "clicks_source": { "enum": ["gsc", "none"] },
+    "total_googlebot_hits": { "type": ["integer", "null"] },
+    "crawl_budget": {
+      "type": "object",
+      "properties": {
+        "wasted_bot_hits_no_demand_no_clicks": { "type": ["integer", "null"] },
+        "wasted_share": { "type": ["number", "null"] },
+        "projected_savings_bot_hits_from_disallow": { "type": ["integer", "null"] }
+      }
+    },
+    "facet_directives": { "type": "array", "items": { "$ref": "#/$defs/facet" } },
+    "combination_directives": { "type": "array", "items": { "$ref": "#/$defs/combo" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "$defs": {
+    "facet": {
+      "type": "object",
+      "required": ["facet_param", "directive", "implementation"],
+      "properties": {
+        "facet_param": { "type": "string" },
+        "distinct_values": { "type": "integer" },
+        "url_count": { "type": "integer" },
+        "googlebot_hits": { "type": ["integer", "null"] },
+        "gsc_clicks": { "type": ["number", "null"] },
+        "max_value_demand": { "type": ["integer", "null"] },
+        "directive": { "enum": ["index", "canonicalize", "noindex", "robots-disallow"] },
+        "reason": { "type": "string" },
+        "implementation": { "type": "string" },
+        "is_noise": { "type": "boolean" }
+      }
+    },
+    "combo": {
+      "type": "object",
+      "required": ["facet_combination", "directive", "implementation"],
+      "properties": {
+        "facet_combination": { "type": "array", "items": { "type": "string" } },
+        "param_count": { "type": "integer" },
+        "url_count": { "type": "integer" },
+        "googlebot_hits": { "type": ["integer", "null"] },
+        "combination_demand": { "type": ["integer", "null"] },
+        "directive": { "enum": ["index", "canonicalize", "noindex", "robots-disallow"] },
+        "reason": { "type": "string" },
+        "implementation": { "type": "string" }
+      }
+    }
+  }
+}

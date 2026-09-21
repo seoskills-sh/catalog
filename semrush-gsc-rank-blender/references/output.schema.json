@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Semrush-GSC Rank Blender Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "no_data", "error"] },
+    "site": { "type": "string" },
+    "domain": { "type": "string" },
+    "database": { "type": "string" },
+    "date_range": { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 2 },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "semrush_keywords": { "type": "integer" },
+        "gsc_queries": { "type": "integer" },
+        "compared": { "type": "integer" },
+        "agreements": { "type": "integer" },
+        "disagreements": { "type": "integer" },
+        "agreement_rate": { "type": ["number", "null"] },
+        "median_abs_position_delta": { "type": ["number", "null"] },
+        "untracked_demand_queries": { "type": "integer" },
+        "semrush_only_keywords": { "type": "integer" },
+        "delta_threshold": { "type": "number" }
+      }
+    },
+    "disagreements": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/blendRow" }
+    },
+    "untracked_demand": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["keyword", "impressions"],
+        "properties": {
+          "keyword": { "type": "string" },
+          "impressions": { "type": "integer" },
+          "clicks": { "type": "integer" },
+          "gsc_position": { "type": ["number", "null"] },
+          "gsc_top_url": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "semrush_only": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["keyword"],
+        "properties": {
+          "keyword": { "type": "string" },
+          "semrush_position": { "type": ["integer", "null"] },
+          "volume": { "type": ["integer", "null"] },
+          "semrush_url": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "agreements_sample": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/blendRow" }
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    }
+  },
+  "$defs": {
+    "blendRow": {
+      "type": "object",
+      "required": ["keyword", "semrush_position", "gsc_position", "position_delta"],
+      "properties": {
+        "keyword": { "type": "string" },
+        "semrush_position": { "type": ["integer", "null"] },
+        "gsc_position": { "type": ["number", "null"] },
+        "position_delta": { "type": "number" },
+        "impressions": { "type": "integer" },
+        "clicks": { "type": "integer" },
+        "volume": { "type": ["integer", "null"] },
+        "semrush_url": { "type": ["string", "null"] },
+        "gsc_top_url": { "type": ["string", "null"] },
+        "url_mismatch": { "type": "boolean" },
+        "direction": { "enum": ["semrush_optimistic", "semrush_pessimistic"] },
+        "impact": { "type": "number" }
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Toxic Backlink Auditor Output",
+  "type": "object",
+  "required": ["status", "scored_domains", "disavow_file_lines"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "advisory": { "const": true },
+    "target": { "type": "string" },
+    "domains_scored": { "type": "integer" },
+    "toxic_pct": { "type": "number", "minimum": 0, "maximum": 1 },
+    "dofollow_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+    "disavow_candidate_count": { "type": "integer" },
+    "partial": { "type": "integer" },
+    "disavow_file_lines": { "type": "array", "items": { "type": "string" } },
+    "scored_domains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["domain", "toxicity_score", "risk", "reasons"],
+        "properties": {
+          "domain": { "type": "string" },
+          "toxicity_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "risk": { "enum": ["low", "medium", "high"] },
+          "authority": { "type": "number" },
+          "backlinks": { "type": "integer" },
+          "reasons": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

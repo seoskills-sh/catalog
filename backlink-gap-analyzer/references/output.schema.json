@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Backlink Gap Analyzer Output",
+  "type": "object",
+  "required": ["status", "gaps"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "target": { "type": "string" },
+    "competitors": { "type": "array", "items": { "type": "string" } },
+    "target_has_no_backlinks": { "type": "boolean" },
+    "skipped_competitors": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "competitor": { "type": "string" }, "http": { "type": "integer" } } }
+    },
+    "gap_count": { "type": "integer" },
+    "partial": { "type": "integer" },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["referring_domain", "overlap", "priority"],
+        "properties": {
+          "referring_domain": { "type": "string" },
+          "overlap": { "type": "integer", "minimum": 1 },
+          "authority": { "type": "number" },
+          "authority_metric": { "type": "string" },
+          "category": { "type": ["string", "null"] },
+          "links_to": { "type": "array", "items": { "type": "string" } },
+          "priority": { "type": "number" }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

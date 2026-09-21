@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Site Migration Auditor Output",
+  "type": "object",
+  "required": ["status", "summary", "results"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "summary": {
+      "type": "object",
+      "required": ["urls_audited", "redirect_distribution", "avg_parity_score", "total_clicks_at_risk"],
+      "properties": {
+        "urls_audited": { "type": "integer" },
+        "redirect_distribution": {
+          "type": "object",
+          "additionalProperties": { "type": "integer" }
+        },
+        "avg_parity_score": { "type": "number" },
+        "clean_301_pct": { "type": "number" },
+        "broken_or_lost": { "type": "integer" },
+        "total_clicks_at_risk": { "type": "number" },
+        "has_traffic_data": { "type": "boolean" }
+      }
+    },
+    "at_risk": { "type": "array", "items": { "$ref": "#/$defs/record" } },
+    "results": { "type": "array", "items": { "$ref": "#/$defs/record" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "$defs": {
+    "record": {
+      "type": "object",
+      "required": ["old_url", "final_url", "final_status", "redirect_class", "parity_score", "parity_flags"],
+      "properties": {
+        "old_url": { "type": "string" },
+        "final_url": { "type": "string" },
+        "final_status": { "type": "integer" },
+        "hop_count": { "type": "integer" },
+        "hops": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["url", "status"],
+            "properties": {
+              "url": { "type": "string" },
+              "status": { "type": "integer" },
+              "location": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "redirect_class": {
+          "enum": ["OK_301", "PERSISTED_200", "CHAIN", "TEMPORARY_REDIRECT", "LOOP",
+                   "BROKEN_404", "REDIRECT_TO_404", "REDIRECT_TO_ERROR", "FETCH_FAILED", "OTHER"]
+        },
+        "parity_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "parity_flags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "clicks": { "type": "number" },
+        "clicks_at_risk": { "type": "number" }
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Inbound Anchor Risk Analyzer Output",
+  "type": "object",
+  "required": ["status", "distribution"],
+  "properties": {
+    "status": { "enum": ["ok", "no_backlinks", "error"] },
+    "advisory": { "type": "boolean" },
+    "target": { "type": "string" },
+    "weighting": { "enum": ["referring_domains", "backlinks"] },
+    "velocity_available": { "type": "boolean" },
+    "distribution": { "type": "object", "additionalProperties": { "type": "number" } },
+    "exact_commercial_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+    "branded_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+    "generic_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+    "flags": {
+      "type": "array",
+      "items": { "enum": ["OVER_OPTIMIZED_COMMERCIAL", "LOW_BRANDED", "VELOCITY_SPIKE"] }
+    },
+    "risk_level": { "enum": ["low", "medium", "high"] },
+    "recommended_mix": { "type": "object", "additionalProperties": { "type": "string" } },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

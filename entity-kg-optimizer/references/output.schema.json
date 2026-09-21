@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Entity Knowledge-Graph Optimizer Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "sources_unavailable", "error"] },
+    "brand": { "type": "string" },
+    "grounding_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "kg": {
+      "type": "object",
+      "properties": {
+        "kg_status": { "enum": ["ok", "skipped_no_key", "rate_limited", "error"] },
+        "kg_entity": { "enum": ["recognized", "unrecognized"] },
+        "types": {},
+        "description": { "type": ["string", "null"] },
+        "detailed": { "type": "boolean" },
+        "score": { "type": ["number", "null"] }
+      }
+    },
+    "wikidata": {
+      "type": "object",
+      "properties": {
+        "wd_status": { "enum": ["ok", "error"] },
+        "wd_entity": { "enum": ["recognized", "unrecognized_or_ambiguous"] },
+        "qid": { "type": "string" },
+        "has_official_website": { "type": "boolean" },
+        "instance_of": { "type": "array", "items": { "type": "string" } },
+        "description": { "type": ["string", "null"] },
+        "reference_count": { "type": "integer" }
+      }
+    },
+    "finding_count": { "type": "integer" },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "severity", "recommendation"],
+        "properties": {
+          "code": {
+            "enum": ["NOT_IN_KG", "NOT_IN_WIKIDATA", "MISSING_OFFICIAL_WEBSITE", "WEAK_SAMEAS",
+                     "MISSING_ENTITY_TYPE", "THIN_DESCRIPTION", "NO_CORROBORATION"]
+          },
+          "severity": { "enum": ["high", "medium", "low"] },
+          "recommendation": { "type": "string" }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

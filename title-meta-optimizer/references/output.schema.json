@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Title & Meta Pixel Optimizer Output",
+  "type": "object",
+  "required": ["status", "results"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "priority_basis": { "enum": ["impressions", "none"] },
+    "pages_audited": { "type": "integer" },
+    "with_issues": { "type": "integer" },
+    "note": { "type": "string" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "status", "issues"],
+        "properties": {
+          "url": { "type": "string" },
+          "status": { "const": "ok" },
+          "title": { "type": "string" },
+          "title_px": { "type": "integer" },
+          "title_chars": { "type": "integer" },
+          "meta": { "type": "string" },
+          "meta_px": { "type": "integer" },
+          "meta_chars": { "type": "integer" },
+          "impressions": { "type": "integer" },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["code", "severity"],
+              "properties": {
+                "code": {
+                  "enum": ["TITLE_MISSING", "TITLE_TRUNCATED", "TITLE_TOO_SHORT", "META_MISSING",
+                           "META_TRUNCATED", "KEYWORD_NOT_IN_TITLE", "KEYWORD_NOT_FRONT_LOADED",
+                           "DUPLICATE_TITLE", "DUPLICATE_META", "IRREDUCIBLE"]
+                },
+                "severity": { "enum": ["critical", "warning", "info"] }
+              },
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    },
+    "unreachable": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "url": { "type": "string" }, "http_status": { "type": "integer" } } }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

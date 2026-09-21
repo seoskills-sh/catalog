@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Query Fan-Out Expander Output",
+  "type": "object",
+  "required": ["status", "queries"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "hl": { "type": "string" },
+    "gl": { "type": "string" },
+    "sources_used": { "type": "array", "items": { "type": "string" } },
+    "autocomplete_status": { "enum": ["ok", "throttled"] },
+    "serp_status": { "enum": ["ok", "rate_limited"] },
+    "hit_cap": { "type": "boolean" },
+    "query_count": { "type": "integer" },
+    "intent_buckets": { "type": "object", "additionalProperties": { "type": "integer" } },
+    "queries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["query", "depth", "source"],
+        "properties": {
+          "query": { "type": "string" },
+          "depth": { "type": "integer" },
+          "source": { "type": "string" },
+          "parent": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

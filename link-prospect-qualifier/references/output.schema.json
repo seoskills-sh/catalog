@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Link Prospect Qualifier Output",
+  "type": "object",
+  "required": ["status", "prospects"],
+  "properties": {
+    "status": { "enum": ["ok", "no_prospects", "error"] },
+    "topic": { "type": "string" },
+    "scoring_basis": { "enum": ["heuristic", "backlink_provider"] },
+    "qualified_count": { "type": "integer" },
+    "disqualified_count": { "type": "integer" },
+    "partial": { "type": "integer" },
+    "prospects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["domain", "relevance", "authority", "priority"],
+        "properties": {
+          "domain": { "type": "string" },
+          "relevance": { "type": "number", "minimum": 0, "maximum": 1 },
+          "authority": { "type": "number" },
+          "authority_metric": { "type": "string" },
+          "links_to_competitor": { "type": "boolean" },
+          "spam_risk": { "enum": ["low", "medium", "high"] },
+          "priority": { "type": "number" },
+          "contact_hint": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Crawl-Trap & Facet Detector Output",
+  "type": "object",
+  "required": ["status", "traps"],
+  "properties": {
+    "status": { "enum": ["ok", "partial_rate_limited", "error"] },
+    "pages_crawled": { "type": "integer" },
+    "hit_cap": { "type": "boolean" },
+    "trap_count": { "type": "integer" },
+    "traps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["signature", "type", "url_count", "containment"],
+        "properties": {
+          "signature": { "type": "string" },
+          "type": {
+            "enum": ["FACETED_NAV", "CALENDAR_LOOP", "SESSION_OR_TRACKING", "SORT_ORDER_PAGINATION", "GENERIC_PARAM_EXPLOSION"]
+          },
+          "param_keys": { "type": "array", "items": { "type": "string" } },
+          "url_count": { "type": "integer" },
+          "content_uniqueness_estimate": { "type": "number", "minimum": 0, "maximum": 1 },
+          "waste_score": { "type": "number" },
+          "example_url": { "type": "string" },
+          "containment": { "type": "string" }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

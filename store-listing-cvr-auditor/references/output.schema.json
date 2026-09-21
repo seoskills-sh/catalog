@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Store Listing CVR Auditor Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "insufficient", "error"] },
+    "app_id": { "type": ["string", "null"] },
+    "platform": { "enum": ["ios", "android"] },
+    "scores": {
+      "type": "object",
+      "required": ["overall"],
+      "properties": {
+        "overall": { "type": "integer", "minimum": 0, "maximum": 100 }
+      },
+      "additionalProperties": { "type": "integer" }
+    },
+    "checks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/check" }
+    },
+    "prioritized_fixes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/check" }
+    },
+    "experiment_plan": {
+      "type": "object",
+      "required": ["element", "success_metric", "min_sample_per_variant"],
+      "properties": {
+        "element": { "type": "string" },
+        "platform": { "enum": ["ios", "android"] },
+        "mechanism": { "type": "string" },
+        "variants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "change": { "type": "string" }
+            }
+          }
+        },
+        "max_treatments_supported": { "type": "integer" },
+        "traffic_split": { "type": "array", "items": { "type": "number" } },
+        "success_metric": { "type": "string" },
+        "baseline_cvr": { "type": "number" },
+        "baseline_assumed": { "type": "boolean" },
+        "min_detectable_effect_rel": { "type": "number" },
+        "min_sample_per_variant": { "type": ["integer", "null"] },
+        "min_sample_total": { "type": ["integer", "null"] },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "$defs": {
+    "check": {
+      "type": "object",
+      "required": ["id", "category", "status", "weight"],
+      "properties": {
+        "id": { "type": "string" },
+        "category": { "enum": ["icon", "screenshots", "text", "localization"] },
+        "status": { "enum": ["pass", "warn", "fail"] },
+        "weight": { "type": "number" },
+        "message": { "type": "string" },
+        "recommendation": { "type": ["string", "null"] },
+        "impact": { "type": "number" }
+      }
+    }
+  }
+}

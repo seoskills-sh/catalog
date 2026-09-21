@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Hreflang Network Validator Output",
+  "type": "object",
+  "required": ["status", "issues"],
+  "properties": {
+    "status": { "enum": ["ok", "empty_input", "error"] },
+    "urls_checked": { "type": "integer" },
+    "issue_count": { "type": "integer" },
+    "valid": { "type": "boolean", "description": "true when there are zero error-level issues" },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "code", "level"],
+        "properties": {
+          "url": { "type": "string" },
+          "target": { "type": "string" },
+          "code": {
+            "enum": [
+              "RETURN_TAG_MISSING", "SELF_REFERENCE_MISSING", "INVALID_LOCALE",
+              "TARGET_NOT_200", "NON_CANONICAL_TARGET", "DUPLICATE_LOCALE",
+              "MISSING_EXPECTED_LOCALE", "TARGET_UNVERIFIABLE", "NO_HREFLANG_DECLARED"
+            ]
+          },
+          "detail": {},
+          "level": { "enum": ["error", "warn", "info"] }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

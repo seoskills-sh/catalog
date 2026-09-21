@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SEO Metrics API Orchestrator Output",
+  "type": "object",
+  "required": ["status", "rows", "spend_report"],
+  "properties": {
+    "status": { "enum": ["ok", "partial", "error"] },
+    "degraded": { "type": "boolean" },
+    "requested_metrics": {
+      "type": "array",
+      "items": { "enum": ["domain_authority", "backlinks", "volume", "difficulty"] }
+    },
+    "targets": {
+      "type": "object",
+      "properties": {
+        "domains": { "type": "array", "items": { "type": "string" } },
+        "keywords": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["metric", "target", "target_type", "values", "sources", "status"],
+        "properties": {
+          "metric": { "enum": ["domain_authority", "backlinks", "volume", "difficulty"] },
+          "target": { "type": "string" },
+          "target_type": { "enum": ["domain", "keyword"] },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["vendor", "value"],
+              "properties": {
+                "vendor": { "enum": ["ahrefs", "semrush", "moz", "dataforseo"] },
+                "value": { "type": "number" }
+              }
+            }
+          },
+          "sources": { "type": "array", "items": { "type": "string" } },
+          "consensus": { "type": "number" },
+          "source_count": { "type": "integer" },
+          "status": { "enum": ["ok", "unavailable"] },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "vendor": { "type": "string" },
+                "reason": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "unavailable_rows": { "type": "integer" },
+    "spend_report": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["vendor", "configured", "requests_made", "credits_spent", "budget", "remaining", "status"],
+        "properties": {
+          "vendor": { "enum": ["ahrefs", "semrush", "moz", "dataforseo"] },
+          "configured": { "type": "boolean" },
+          "requests_made": { "type": "integer" },
+          "credits_spent": { "type": "integer" },
+          "budget": { "type": "integer" },
+          "remaining": { "type": "integer" },
+          "status": { "type": "string" }
+        }
+      }
+    },
+    "dedup_calls_saved": { "type": "integer" },
+    "notes": { "type": "array", "items": { "type": "string" } },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}

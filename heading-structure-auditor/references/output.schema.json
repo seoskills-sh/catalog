@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Heading Structure Auditor Output",
+  "type": "object",
+  "required": ["status", "results"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "pages_audited": { "type": "integer" },
+    "failing": { "type": "integer" },
+    "hit_cap": { "type": "boolean" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "status", "structure_score", "grade", "issues", "outline"],
+        "properties": {
+          "url": { "type": "string" },
+          "status": { "const": "ok" },
+          "heading_count": { "type": "integer" },
+          "no_headings": { "type": "boolean" },
+          "structure_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "grade": { "enum": ["pass", "needs_work", "fail"] },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["code"],
+              "properties": {
+                "code": { "enum": ["NO_H1", "MULTIPLE_H1", "LEVEL_SKIP", "EMPTY_HEADING", "GENERIC_HEADING", "H1_KEYWORD_MISSING"] }
+              },
+              "additionalProperties": true
+            }
+          },
+          "outline": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": { "level": { "type": "integer" }, "text": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "unreachable": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "url": { "type": "string" }, "http_status": { "type": "integer" } } }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

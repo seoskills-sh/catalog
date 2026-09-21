@@ -1,0 +1,24 @@
+{
+  "description": "Zero-click risk weights per SERP feature (higher = more click absorption). Tuned from click-loss studies; adjust to the account's vertical. serpapi_keys maps each feature to the SerpApi response field used for presence detection.",
+  "weights": {
+    "ai_overview": 45,
+    "featured_snippet": 30,
+    "instant_answer": 35,
+    "knowledge_panel": 25,
+    "people_also_ask": 12,
+    "inline_videos": 8,
+    "local_pack": 20,
+    "shopping": 18
+  },
+  "serpapi_keys": {
+    "ai_overview": "ai_overview",
+    "featured_snippet": "answer_box",
+    "instant_answer": "answer_box",
+    "knowledge_panel": "knowledge_graph",
+    "people_also_ask": "related_questions",
+    "inline_videos": "inline_videos",
+    "local_pack": "local_results",
+    "shopping": "shopping_results"
+  },
+  "push_down_penalty": 15
+}

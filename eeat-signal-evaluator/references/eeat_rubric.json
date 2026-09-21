@@ -1,0 +1,12 @@
+{
+  "description": "E-E-A-T scoring rubric: signal cues, credential detection, authoritative-domain hints, and pillar weights. YMYL weights shift emphasis to expertise/trust. Tune cues to the vertical.",
+  "experience_cues": [
+    "i tested", "we tested", "i measured", "we measured", "in my experience",
+    "hands-on", "first-hand", "i tried", "we tried", "our team used", "i used",
+    "field test", "real-world", "case study", "i visited", "i built"
+  ],
+  "credential_regex": "\\b(phd|md|dds|rd|cfa|cpa|licensed|certified|board-certified|professor|dr\\.|registered dietitian|years of experience)\\b",
+  "authoritative_tlds": [".gov", ".edu", "who.int", "nih.gov", "ncbi.nlm.nih.gov", "wikipedia.org", "reuters.com", "nature.com", "sciencedirect.com"],
+  "default_weights": { "experience": 0.25, "expertise": 0.25, "authoritativeness": 0.25, "trust": 0.25 },
+  "ymyl_weights": { "experience": 0.15, "expertise": 0.35, "authoritativeness": 0.25, "trust": 0.25 }
+}

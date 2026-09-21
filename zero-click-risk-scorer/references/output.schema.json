@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Zero-Click Risk Scorer Output",
+  "type": "object",
+  "required": ["status", "keywords"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "device": { "enum": ["desktop", "mobile"] },
+    "scored_count": { "type": "integer" },
+    "partial": { "type": "integer" },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["term", "zero_click_risk", "class", "features_present"],
+        "properties": {
+          "term": { "type": "string" },
+          "volume": { "type": ["integer", "null"] },
+          "zero_click_risk": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "class": { "enum": ["low", "moderate", "high"] },
+          "adjusted_opportunity": { "type": ["integer", "null"] },
+          "features_present": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "skipped": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "term": { "type": "string" }, "reason": { "type": "string" } } }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

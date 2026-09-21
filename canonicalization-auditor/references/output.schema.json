@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Canonicalization Auditor Output",
+  "type": "object",
+  "required": ["status", "summary", "conflicts"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "summary": {
+      "type": "object",
+      "required": ["pages_crawled", "conflicts_found", "conflict_type_counts"],
+      "properties": {
+        "pages_crawled": { "type": "integer" },
+        "pages_probed_total": { "type": "integer" },
+        "conflicts_found": { "type": "integer" },
+        "duplicate_clusters": { "type": "integer" },
+        "probe_budget_exhausted": { "type": "boolean" },
+        "sitemap_urls": { "type": "integer" },
+        "conflict_type_counts": { "type": "object", "additionalProperties": { "type": "integer" } }
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "conflict_types", "corrected_canonical"],
+        "properties": {
+          "url": { "type": "string" },
+          "conflict_types": {
+            "type": "array",
+            "items": {
+              "enum": ["CANONICAL_TO_REDIRECT", "CANONICAL_TO_NON200", "CANONICAL_TO_NOINDEX",
+                       "CANONICAL_CHAIN", "CANONICAL_TARGET_UNVERIFIED", "NOINDEX_WITH_CANONICAL",
+                       "CANONICALIZED_BUT_IN_SITEMAP", "HREFLANG_CONFLICT"]
+            }
+          },
+          "canonical_declared": { "type": ["string", "null"] },
+          "canonical_self": { "type": "boolean" },
+          "robots": { "type": "string" },
+          "in_sitemap": { "type": "boolean" },
+          "corrected_canonical": { "type": "string" },
+          "hreflang_issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["issue"],
+              "properties": {
+                "issue": {
+                  "enum": ["MISSING_XDEFAULT", "INVALID_LANG_CODE", "ALTERNATE_NON_200",
+                           "NON_RECIPROCAL", "ALTERNATE_NON_CANONICAL"]
+                },
+                "lang": { "type": "string" },
+                "href": { "type": "string" },
+                "status": { "type": ["integer", "null"] },
+                "detail": { "type": "string" }
+              }
+            }
+          },
+          "why": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "duplicate_clusters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["urls", "self_canonical", "suggested_canonical"],
+        "properties": {
+          "content_hash": { "type": "string" },
+          "urls": { "type": "array", "items": { "type": "string" } },
+          "self_canonical": { "type": "array", "items": { "type": "string" } },
+          "suggested_canonical": { "type": "string" }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Core Web Vitals CrUX Monitor Output",
+  "type": "object",
+  "required": ["status", "results"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "count": { "type": "integer" },
+    "partial": { "type": "integer" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "form_factor", "status"],
+        "properties": {
+          "target": { "type": "object" },
+          "form_factor": { "enum": ["PHONE", "DESKTOP"] },
+          "status": { "enum": ["ok", "no_crux_data", "bad_target"] },
+          "data_level": { "enum": ["url", "origin", "origin_fallback"] },
+          "cwv_pass": { "oneOf": [{ "type": "boolean" }, { "const": "unknown" }] },
+          "metrics": {
+            "type": "object",
+            "patternProperties": {
+              "^(LCP|INP|CLS)$": {
+                "type": "object",
+                "properties": {
+                  "p75": { "type": ["number", "null"] },
+                  "rating": { "enum": ["good", "needs_improvement", "poor", "insufficient_data"] },
+                  "delta_vs_baseline": { "type": "number" },
+                  "regressed": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

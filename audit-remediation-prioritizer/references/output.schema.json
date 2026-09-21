@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Audit Remediation Prioritizer Output",
+  "type": "object",
+  "required": ["status", "summary", "roadmap", "findings"],
+  "properties": {
+    "status": { "enum": ["ok", "insufficient", "error"] },
+    "summary": {
+      "type": "object",
+      "required": ["findings_ingested", "unique_findings", "sources", "model"],
+      "properties": {
+        "findings_ingested": { "type": "integer" },
+        "unique_findings": { "type": "integer" },
+        "duplicates_merged": { "type": "integer" },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": { "file": { "type": "string" }, "findings": { "type": "integer" } }
+          }
+        },
+        "model": { "enum": ["rice", "ice"] },
+        "total_traffic_at_stake": { "type": "number" },
+        "has_traffic_data": { "type": "boolean" },
+        "template_count": { "type": "integer" },
+        "phases": { "type": "integer" },
+        "export_mode": { "enum": ["dry_run"] },
+        "jira_credentials_present": { "type": "boolean" },
+        "reason": { "type": "string" }
+      }
+    },
+    "roadmap": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["phase", "order", "finding_type", "owner", "effort", "score"],
+        "properties": {
+          "phase": { "type": "integer" },
+          "order": { "type": "integer" },
+          "finding_type": { "type": "string" },
+          "count": { "type": "integer" },
+          "url_count": { "type": "integer" },
+          "traffic_at_stake": { "type": "number" },
+          "score": { "type": "number" },
+          "owner": { "type": "string" },
+          "effort": { "type": "number" },
+          "impact": { "type": "number" },
+          "example_urls": { "type": "array", "items": { "type": "string" } },
+          "fix": { "type": "string" }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["finding_type", "urls", "score", "owner", "effort"],
+        "properties": {
+          "finding_type": { "type": "string" },
+          "urls": { "type": "array", "items": { "type": "string" } },
+          "source": { "type": "string" },
+          "sources": { "type": "array", "items": { "type": "string" } },
+          "traffic_at_stake": { "type": "number" },
+          "count": { "type": "integer" },
+          "dupe_count": { "type": "integer" },
+          "evidence": { "type": "string" },
+          "severity_hint": { "type": ["string", "null"] },
+          "owner": { "type": "string" },
+          "effort": { "type": "number" },
+          "impact": { "type": "number" },
+          "confidence": { "type": "number" },
+          "reach": { "type": "number" },
+          "score": { "type": "number" },
+          "extra": { "type": "object" }
+        }
+      }
+    },
+    "tickets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "body", "labels", "owner"],
+        "properties": {
+          "title": { "type": "string" },
+          "body": { "type": "string" },
+          "labels": { "type": "array", "items": { "type": "string" } },
+          "owner": { "type": "string" },
+          "estimate_points": { "type": "number" },
+          "score": { "type": "number" },
+          "phase": { "type": "integer" }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TF-IDF Entity Gap Analyzer Output",
+  "type": "object",
+  "required": ["status", "gaps"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "query": { "type": "string" },
+    "target_url": { "type": "string" },
+    "entity_backend": { "enum": ["google_nl", "tfidf"] },
+    "mixed_backend": { "type": "boolean" },
+    "competitors_profiled": { "type": "integer" },
+    "target_thin": { "type": "boolean" },
+    "gap_count": { "type": "integer" },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["term", "coverage", "priority"],
+        "properties": {
+          "term": { "type": "string" },
+          "coverage": { "type": "number", "minimum": 0, "maximum": 1 },
+          "mean_weight": { "type": "number" },
+          "priority": { "type": "number" }
+        }
+      }
+    },
+    "covered_well": { "type": "array", "items": { "type": "string" } },
+    "skipped_competitors": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "url": { "type": "string" }, "reason": { "type": "string" } } }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

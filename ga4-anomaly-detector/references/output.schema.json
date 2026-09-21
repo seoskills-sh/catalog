@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GA4 Anomaly Detector Output",
+  "type": "object",
+  "required": ["status", "property_id", "anomaly_count", "anomalies"],
+  "properties": {
+    "status": { "enum": ["ok", "insufficient_history", "error"] },
+    "property_id": { "type": "string", "pattern": "^[0-9]+$" },
+    "confidence": { "enum": ["normal", "low"] },
+    "sensitivity": { "enum": ["low", "medium", "high"] },
+    "metrics_evaluated": { "type": "array", "items": { "type": "string" } },
+    "skipped_metrics": { "type": "array", "items": { "type": "string" } },
+    "anomaly_count": { "type": "integer", "minimum": 0 },
+    "anomalies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["date", "metric", "value", "expected", "robust_z", "direction"],
+        "properties": {
+          "date": { "type": "string", "pattern": "^[0-9]{8}$" },
+          "metric": { "type": "string" },
+          "value": { "type": "number" },
+          "expected": { "type": "number" },
+          "robust_z": { "type": "number" },
+          "direction": { "enum": ["drop", "spike"] },
+          "drivers": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "type": "object",
+              "required": ["segment", "dimension", "contribution"],
+              "properties": {
+                "segment": { "type": "string" },
+                "dimension": { "type": "string" },
+                "contribution": { "type": "number", "description": "signed share of the total delta, 0..1" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "quota": { "type": "object", "description": "GA4 propertyQuota echoed from the last response" },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}

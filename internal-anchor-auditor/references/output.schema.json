@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Internal Anchor Text Auditor Output",
+  "type": "object",
+  "required": ["status", "results"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "pages_crawled": { "type": "integer" },
+    "hit_cap": { "type": "boolean" },
+    "destinations_analyzed": { "type": "integer" },
+    "flagged": { "type": "integer" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["destination", "inbound_internal_links", "distribution", "flags"],
+        "properties": {
+          "destination": { "type": "string" },
+          "inbound_internal_links": { "type": "integer" },
+          "followed": { "type": "integer" },
+          "nofollow": { "type": "integer" },
+          "distribution": {
+            "type": "object",
+            "additionalProperties": { "type": "integer" }
+          },
+          "exact_match_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+          "generic_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+          "flags": {
+            "type": "array",
+            "items": { "enum": ["OVER_OPTIMIZED", "GENERIC_OVERUSE", "EMPTY_OR_URL_ANCHORS", "THIN_INTERNAL_LINKS"] }
+          },
+          "classification": { "enum": ["full", "no_keywords"] }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "E-E-A-T Signal Evaluator Output",
+  "type": "object",
+  "required": ["status", "scores", "missing_signals"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "url": { "type": "string" },
+    "is_ymyl": { "type": "boolean" },
+    "author": { "type": ["string", "null"] },
+    "author_entity_status": { "enum": ["recognized", "not_found", "unverifiable", "not_checked"] },
+    "scores": {
+      "type": "object",
+      "required": ["experience", "expertise", "authoritativeness", "trust", "overall"],
+      "properties": {
+        "experience": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "expertise": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "authoritativeness": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "trust": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "overall": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "authoritative_citations": { "type": "integer" },
+    "date_published": { "type": ["string", "null"] },
+    "date_modified": { "type": ["string", "null"] },
+    "missing_signals": { "type": "array", "items": { "type": "string" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" }, "http_status": { "type": "integer" } }
+    }
+  }
+}

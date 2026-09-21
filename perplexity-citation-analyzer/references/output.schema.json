@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Perplexity Citation Analyzer Output",
+  "type": "object",
+  "required": ["status", "by_domain", "cells"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "model": { "type": "string" },
+    "model_overridden": { "type": "boolean" },
+    "queries": { "type": "integer" },
+    "total_citations": { "type": "integer" },
+    "by_domain": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["domain", "count", "share"],
+        "properties": {
+          "domain": { "type": "string" },
+          "count": { "type": "integer" },
+          "share": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "by_page_type": { "type": "object", "additionalProperties": { "type": "integer" } },
+    "brand_citation_rate": { "type": ["number", "null"] },
+    "competitor_share": { "type": "object", "additionalProperties": { "type": "number" } },
+    "citation_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string" },
+          "competitors_cited": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "cells": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["query", "status"],
+        "properties": {
+          "query": { "type": "string" },
+          "status": { "enum": ["ok", "no_citations", "rate_limited", "engine_error"] },
+          "citations": { "type": "array", "items": { "type": "string" } },
+          "brand_cited": { "type": "boolean" }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

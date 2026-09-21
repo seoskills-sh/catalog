@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SERP Competitor Landscape Mapper Output",
+  "type": "object",
+  "required": ["status", "competitor_landscape"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "keywords_analyzed": { "type": "integer" },
+    "partial": { "type": "integer" },
+    "skipped": { "type": "array", "items": { "type": "string" } },
+    "competitor_landscape": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["domain", "serp_share", "keyword_coverage", "avg_position", "tier"],
+        "properties": {
+          "domain": { "type": "string" },
+          "serp_share": { "type": "number", "minimum": 0, "maximum": 1 },
+          "keyword_coverage": { "type": "integer" },
+          "avg_position": { "type": "number" },
+          "is_aggregator": { "type": "boolean" },
+          "tier": { "enum": ["true_competitor", "incidental"] }
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "domain": { "type": "string" },
+        "landscape_rank": { "type": ["integer", "null"] },
+        "keywords_top3": { "type": "integer" },
+        "outranked_on": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

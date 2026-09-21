@@ -1,0 +1,7 @@
+{
+  "description": "Position -> organic CTR weight used to weight share-of-voice (positions 11+ contribute negligible visibility). Override with the account's own curve when available.",
+  "curve": {
+    "1": 0.271, "2": 0.152, "3": 0.101, "4": 0.070, "5": 0.051,
+    "6": 0.039, "7": 0.031, "8": 0.026, "9": 0.022, "10": 0.019
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GBP Suspension Monitor Output",
+  "type": "object",
+  "required": ["status", "alerts", "snapshots"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "account": { "type": "string" },
+    "locations_checked": { "type": "integer" },
+    "alert_count": { "type": "integer" },
+    "partial": { "type": "integer" },
+    "alerts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["location", "severity", "type"],
+        "properties": {
+          "location": { "type": "string" },
+          "severity": { "enum": ["critical", "warning", "info"] },
+          "type": {
+            "enum": ["baseline", "suspension_detected", "field_changed", "location_disappeared"]
+          },
+          "diff": {
+            "type": "object",
+            "properties": { "field": { "type": "string" }, "before": {}, "after": {} }
+          },
+          "remediation": { "type": "string" }
+        }
+      }
+    },
+    "snapshots": {
+      "type": "array",
+      "description": "Persist and pass back as `previous` next run.",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "title": { "type": ["string", "null"] },
+          "fields": { "type": "object" },
+          "voice_of_merchant": { "type": ["boolean", "null"] },
+          "can_post": { "type": ["boolean", "null"] },
+          "captured_at": { "type": "string" }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

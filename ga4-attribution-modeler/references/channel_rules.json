@@ -1,0 +1,12 @@
+{
+  "description": "Ordered source/medium -> channel rules (first match wins). Mirrors the SQL CASE so the agent can reproduce classification outside BigQuery. GA4 convention: unknown/empty medium with (direct) source => Direct.",
+  "rules": [
+    { "channel": "Organic Search", "match": { "medium": "organic" } },
+    { "channel": "Paid Search",    "match": { "medium_regex": "cpc|ppc|paid" } },
+    { "channel": "Social",         "match": { "medium_regex": "social", "source_regex": "facebook|instagram|twitter|x\\.com|linkedin|tiktok|reddit|pinterest" } },
+    { "channel": "Email",          "match": { "medium": "email" } },
+    { "channel": "Referral",       "match": { "medium": "referral" } },
+    { "channel": "Direct",         "match": { "medium_in": ["(none)", ""], "source": "(direct)" } },
+    { "channel": "Other",          "match": { "fallback": true } }
+  ]
+}

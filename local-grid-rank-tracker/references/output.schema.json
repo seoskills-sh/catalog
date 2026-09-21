@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Local Grid Rank Tracker Output",
+  "type": "object",
+  "required": ["status", "grid_size", "matrix"],
+  "properties": {
+    "status": { "enum": ["ok", "partial", "error"] },
+    "business_name": { "type": "string" },
+    "keyword": { "type": "string" },
+    "grid_size": { "type": "integer" },
+    "spacing_km": { "type": "number" },
+    "center": { "type": "object", "properties": { "lat": { "type": "number" }, "lng": { "type": "number" } } },
+    "avg_rank": { "type": ["number", "null"] },
+    "found_points": { "type": "integer" },
+    "total_points": { "type": "integer" },
+    "share_of_top3": { "type": "number", "minimum": 0, "maximum": 1 },
+    "center_rank": { "oneOf": [{ "type": "integer" }, { "const": "not_found" }] },
+    "partial_points": { "type": "integer" },
+    "cost_note": { "type": ["string", "null"] },
+    "matrix": {
+      "type": "array",
+      "description": "N rows (north→south) of N cells (west→east). null = unqueried.",
+      "items": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "properties": {
+                "rank": { "oneOf": [{ "type": "integer" }, { "const": "not_found" }] },
+                "match_confidence": { "type": "number" },
+                "lat": { "type": "number" },
+                "lng": { "type": "number" }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

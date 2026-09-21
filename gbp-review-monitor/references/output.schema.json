@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GBP Review Velocity & Sentiment Monitor Output",
+  "type": "object",
+  "required": ["status", "locations"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "account": { "type": "string" },
+    "window_days": { "type": "integer" },
+    "sentiment_backend": { "enum": ["lexicon", "openai"] },
+    "partial": { "type": "integer" },
+    "locations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["location", "status"],
+        "properties": {
+          "location": { "type": "string" },
+          "status": { "enum": ["ok", "fetch_error"] },
+          "total_reviews": { "type": "integer" },
+          "reviews_per_week": { "type": "number" },
+          "mean_star": { "type": ["number", "null"] },
+          "star_delta_recent_vs_older": { "type": ["number", "null"] },
+          "response_rate": { "type": ["number", "null"] },
+          "unanswered_recent": { "type": "integer" },
+          "negative_themes": { "type": "object", "additionalProperties": { "type": "integer" } },
+          "flags": {
+            "type": "array",
+            "items": { "enum": ["velocity_drop", "sentiment_decline", "low_response_rate"] }
+          },
+          "low_confidence": { "type": "boolean" }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

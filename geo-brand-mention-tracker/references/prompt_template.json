@@ -1,0 +1,11 @@
+{
+  "description": "Recommended buyer-intent prompt set for GEO monitoring. Mix category, comparison, and recommendation intents — these are what real users ask assistants. Substitute {category}, {competitor}, {use_case}.",
+  "prompt_archetypes": [
+    { "intent": "category_recommendation", "template": "What are the best {category} tools in 2026?" },
+    { "intent": "direct_recommendation", "template": "Which {category} platform should I use for {use_case}?" },
+    { "intent": "comparison", "template": "Compare the top {category} providers and their trade-offs." },
+    { "intent": "alternatives", "template": "What are good alternatives to {competitor} for {use_case}?" },
+    { "intent": "trust", "template": "Is {brand} a reputable {category} provider? What are its pros and cons?" }
+  ],
+  "guidance": "Keep prompts neutral and buyer-shaped. Never instruct the engine to favor the brand — that invalidates the measurement."
+}

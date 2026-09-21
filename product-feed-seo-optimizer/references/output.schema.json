@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Product Feed SEO Optimizer Output",
+  "type": "object",
+  "required": ["status", "products"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "products_audited": { "type": "integer" },
+    "demand_informed": { "type": "boolean" },
+    "disapprovals_source": { "enum": ["content_api", "none"] },
+    "invalid_gtins": { "type": "integer" },
+    "missing_identifiers": { "type": "integer" },
+    "products_disapproved": { "type": "integer" },
+    "avg_title_score": { "type": "number" },
+    "avg_attribute_coverage": { "type": "number" },
+    "products": { "type": "array", "items": { "$ref": "#/$defs/product" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "$defs": {
+    "issue": {
+      "type": "object",
+      "required": ["code"],
+      "properties": {
+        "code": { "type": "string" },
+        "length": { "type": "integer" },
+        "limit": { "type": "integer" },
+        "optimal": { "type": "integer" },
+        "severity": { "type": "string" },
+        "brand": { "type": "string" },
+        "tokens": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "disapproval": {
+      "type": "object",
+      "properties": {
+        "code": { "type": ["string", "null"] },
+        "servability": { "type": ["string", "null"] },
+        "description": { "type": ["string", "null"] }
+      }
+    },
+    "product": {
+      "type": "object",
+      "required": ["id", "title_score", "rewritten_title", "identifier_status", "attribute_coverage"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "title_score": { "type": "integer" },
+        "title_issues": { "type": "array", "items": { "$ref": "#/$defs/issue" } },
+        "rewritten_title": { "type": "string" },
+        "title_changed": { "type": "boolean" },
+        "demand_lead_keyword": { "type": ["string", "null"] },
+        "gtin": { "type": ["string", "null"] },
+        "gtin_valid": { "type": "boolean" },
+        "identifier_status": {
+          "enum": ["gtin_valid", "invalid_gtin", "brand_mpn", "identifier_exempt", "missing_identifier"]
+        },
+        "attribute_coverage": { "type": "number" },
+        "missing_attributes": { "type": "array", "items": { "type": "string" } },
+        "schema_status": { "type": "string" },
+        "recommended_jsonld": { "type": "object" },
+        "merchant_disapprovals": { "type": "array", "items": { "$ref": "#/$defs/disapproval" } }
+      }
+    }
+  }
+}

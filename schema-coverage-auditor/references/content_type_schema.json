@@ -1,0 +1,47 @@
+{
+  "description": "Recommended schema.org types + required/recommended properties per content type, and the rich results they unlock. Basis for coverage auditing (not markup generation).",
+  "types": {
+    "article": {
+      "recommended_types": ["Article", "BreadcrumbList"],
+      "required": { "Article": ["headline", "author", "datePublished"] },
+      "recommended": { "Article": ["dateModified", "image", "publisher"] },
+      "rich_results": ["article", "breadcrumb"]
+    },
+    "product": {
+      "recommended_types": ["Product", "BreadcrumbList"],
+      "required": { "Product": ["name", "offers"] },
+      "recommended": { "Product": ["aggregateRating", "review", "brand", "image", "sku"] },
+      "rich_results": ["product_snippet", "review_stars", "breadcrumb"]
+    },
+    "faq": {
+      "recommended_types": ["FAQPage"],
+      "required": { "FAQPage": ["mainEntity"] },
+      "recommended": {},
+      "rich_results": ["faq_accordion"]
+    },
+    "howto": {
+      "recommended_types": ["HowTo"],
+      "required": { "HowTo": ["name", "step"] },
+      "recommended": { "HowTo": ["totalTime", "tool", "supply"] },
+      "rich_results": ["howto"]
+    },
+    "localbusiness": {
+      "recommended_types": ["LocalBusiness", "BreadcrumbList"],
+      "required": { "LocalBusiness": ["name", "address", "telephone"] },
+      "recommended": { "LocalBusiness": ["geo", "openingHoursSpecification", "priceRange", "image"] },
+      "rich_results": ["local_business", "breadcrumb"]
+    },
+    "recipe": {
+      "recommended_types": ["Recipe"],
+      "required": { "Recipe": ["name", "recipeIngredient", "recipeInstructions"] },
+      "recommended": { "Recipe": ["aggregateRating", "cookTime", "nutrition", "image"] },
+      "rich_results": ["recipe", "review_stars"]
+    },
+    "webpage": {
+      "recommended_types": ["WebPage", "Organization", "BreadcrumbList"],
+      "required": { "Organization": ["name", "url"] },
+      "recommended": { "Organization": ["logo", "sameAs"] },
+      "rich_results": ["breadcrumb", "sitelinks_searchbox"]
+    }
+  }
+}

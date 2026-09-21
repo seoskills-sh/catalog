@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Link Reclamation Finder Output",
+  "type": "object",
+  "required": ["status", "unlinked_mentions", "broken_backlinks"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "brand": { "type": "string" },
+    "notes": { "type": "object", "additionalProperties": { "type": "string" } },
+    "unlinked_mention_count": { "type": "integer" },
+    "broken_backlink_count": { "type": "integer" },
+    "unlinked_mentions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "action"],
+        "properties": {
+          "url": { "type": "string" },
+          "authority": { "type": "number" },
+          "action": { "type": "string" }
+        }
+      }
+    },
+    "broken_backlinks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["broken_target", "type", "action"],
+        "properties": {
+          "broken_target": { "type": "string" },
+          "type": { "enum": ["broken_target", "redirected_target"] },
+          "referring_pages": { "type": "array", "items": { "type": "string" } },
+          "authority": { "type": "number" },
+          "action": { "type": "string" }
+        }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

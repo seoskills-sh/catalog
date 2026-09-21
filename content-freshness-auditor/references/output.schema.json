@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Content Freshness Auditor Output",
+  "type": "object",
+  "required": ["status", "results"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "serp_recency": { "enum": ["off", "enabled", "skipped_no_key", "rate_limited"] },
+    "audited": { "type": "integer" },
+    "stale_or_aging": { "type": "integer" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "status", "staleness_score", "class", "signals"],
+        "properties": {
+          "url": { "type": "string" },
+          "status": { "const": "ok" },
+          "date": { "type": ["string", "null"] },
+          "date_confidence": { "enum": ["normal", "low"] },
+          "age_days": { "type": ["integer", "null"] },
+          "staleness_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "class": { "enum": ["fresh", "aging", "stale"] },
+          "signals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "detail"],
+              "properties": {
+                "type": { "enum": ["old_date", "stale_year", "aging_statistic", "deprecated_reference", "behind_serp"] },
+                "detail": { "type": "string" },
+                "age_days": { "type": "integer" },
+                "year": { "type": "integer" }
+              }
+            }
+          },
+          "monthly_clicks": { "type": "number" },
+          "priority": { "type": "number" },
+          "behind_serp": { "type": "boolean" }
+        }
+      }
+    },
+    "unreachable": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": { "url": { "type": "string" }, "status": { "type": "string" }, "http_status": { "type": "integer" } }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

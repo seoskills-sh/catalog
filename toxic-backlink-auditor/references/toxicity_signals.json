@@ -1,0 +1,13 @@
+{
+  "description": "Weighted backlink toxicity signals. Advisory heuristics for disavow REVIEW, not a certainty of harm. Tune weights and the spam-TLD list to the vertical and provider metrics.",
+  "low_rank_threshold": 50,
+  "sitewide_backlinks_threshold": 500,
+  "spam_tlds": [".xyz", ".top", ".loan", ".click", ".gq", ".tk", ".ml", ".cf", ".work", ".date", ".racing", ".stream", ".download"],
+  "weights": {
+    "low_rank": 25,
+    "spam_tld": 30,
+    "sitewide": 20,
+    "spam_anchor": 35,
+    "nofollow_only_farm": 15
+  }
+}

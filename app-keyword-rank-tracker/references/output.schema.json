@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "App Keyword Rank Tracker Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "baseline", "partial", "error"] },
+    "date": { "type": "string" },
+    "message": { "type": "string" },
+    "keywords_tracked": { "type": "integer" },
+    "stale_count": { "type": "integer" },
+    "out_of_results_convention": { "type": "integer" },
+    "positions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/position" }
+    },
+    "movers": {
+      "type": "object",
+      "properties": {
+        "improved": { "type": "array", "items": { "$ref": "#/$defs/mover" } },
+        "declined": { "type": "array", "items": { "$ref": "#/$defs/mover" } }
+      }
+    },
+    "newly_ranking": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "keyword": { "type": "string" },
+          "store": { "type": "string" },
+          "locale": { "type": "string" },
+          "rank": { "type": "integer" }
+        }
+      }
+    },
+    "lost": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "keyword": { "type": "string" },
+          "store": { "type": "string" },
+          "locale": { "type": "string" },
+          "prev_rank": { "type": "integer" }
+        }
+      }
+    },
+    "volatility_leaders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "keyword": { "type": "string" },
+          "store": { "type": "string" },
+          "locale": { "type": "string" },
+          "volatility": { "type": "number" }
+        }
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "description": "Persist and pass back as previous. tracked[]: per-key rank history.",
+      "properties": {
+        "date": { "type": "string" },
+        "tracked": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key", "history"],
+            "properties": {
+              "key": { "type": "string" },
+              "keyword": { "type": "string" },
+              "store": { "type": "string" },
+              "locale": { "type": "string" },
+              "history": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "date": { "type": "string" },
+                    "rank": { "type": ["integer", "null"] }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "$defs": {
+    "position": {
+      "type": "object",
+      "required": ["keyword", "store", "locale"],
+      "properties": {
+        "keyword": { "type": "string" },
+        "store": { "type": "string" },
+        "locale": { "type": "string" },
+        "rank": { "type": ["integer", "null"] },
+        "prev_rank": { "type": ["integer", "null"] },
+        "state": { "enum": ["ok", "not_found", "stale", "error", "rate_limited"] },
+        "velocity": { "type": ["number", "null"] },
+        "volatility": { "type": ["number", "null"] },
+        "best_rank": { "type": ["integer", "null"] }
+      }
+    },
+    "mover": {
+      "type": "object",
+      "required": ["keyword", "delta"],
+      "properties": {
+        "keyword": { "type": "string" },
+        "store": { "type": "string" },
+        "locale": { "type": "string" },
+        "prev_rank": { "type": "integer" },
+        "rank": { "type": "integer" },
+        "delta": { "type": "integer" }
+      }
+    }
+  }
+}

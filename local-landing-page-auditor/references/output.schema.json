@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Multi-Location Landing Page Auditor Output",
+  "type": "object",
+  "required": ["status", "results"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "pages_audited": { "type": "integer" },
+    "failing": { "type": "integer" },
+    "hit_cap": { "type": "boolean" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "status", "page_score", "grade"],
+        "properties": {
+          "url": { "type": "string" },
+          "status": { "const": "ok" },
+          "has_local_schema": { "type": "boolean" },
+          "missing_schema_fields": { "type": "array", "items": { "type": "string" } },
+          "has_map": { "type": "boolean" },
+          "nap_parity": { "enum": ["match", "mismatch", "missing", "not_checked"] },
+          "word_count": { "type": "integer" },
+          "text_extractable": { "type": "boolean" },
+          "max_similarity": { "type": "number", "minimum": 0, "maximum": 1 },
+          "most_similar_url": { "type": ["string", "null"] },
+          "duplicate": { "type": "boolean" },
+          "thin": { "type": "boolean" },
+          "page_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "grade": { "enum": ["pass", "needs_work", "fail"] },
+          "value": { "type": "number" }
+        }
+      }
+    },
+    "unreachable": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": { "url": { "type": "string" }, "status": { "type": "string" }, "http_status": { "type": "integer" } }
+      }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  }
+}

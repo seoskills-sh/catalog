@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GSC Bulk Export Manager Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "dataset": { "type": "string" },
+    "window": { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 2 },
+    "prior_window": { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 2 },
+    "analyses_run": { "type": "array", "items": { "enum": ["inventory", "decay", "anomaly"] } },
+    "query_inventory": {
+      "type": "object",
+      "properties": {
+        "distinct_queries_returned": { "type": "integer" },
+        "anonymized_impression_share": { "type": ["number", "null"] },
+        "top_queries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["query", "impressions", "clicks"],
+            "properties": {
+              "query": { "type": "string" },
+              "impressions": { "type": "integer" },
+              "clicks": { "type": "integer" },
+              "avg_position": { "type": ["number", "null"] }
+            }
+          }
+        }
+      }
+    },
+    "page_query_decay": {
+      "type": "object",
+      "properties": {
+        "pairs_returned": { "type": "integer" },
+        "decliners": { "type": "integer" },
+        "top_decay": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["url", "query", "clicks_delta"],
+            "properties": {
+              "url": { "type": "string" },
+              "query": { "type": "string" },
+              "prior_clicks": { "type": "integer" },
+              "recent_clicks": { "type": "integer" },
+              "clicks_delta": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "anomaly_windows": {
+      "type": "object",
+      "properties": {
+        "z_threshold": { "type": "number" },
+        "stats": { "type": "object" },
+        "series_days": { "type": "integer" },
+        "anomalies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["date", "clicks", "z_score", "direction"],
+            "properties": {
+              "date": { "type": "string" },
+              "clicks": { "type": "integer" },
+              "z_score": { "type": "number" },
+              "direction": { "enum": ["spike", "drop"] }
+            }
+          }
+        },
+        "series": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "date": { "type": "string" },
+              "clicks": { "type": "integer" },
+              "impressions": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "spend_report": {
+      "type": "object",
+      "properties": {
+        "queries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "analysis": { "type": "string" },
+              "estimated_bytes": { "type": "integer" },
+              "estimated_gb": { "type": "number" }
+            }
+          }
+        },
+        "total_estimated_bytes": { "type": "integer" },
+        "total_estimated_gb": { "type": "number" },
+        "guard_gb": { "type": "number" }
+      }
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}

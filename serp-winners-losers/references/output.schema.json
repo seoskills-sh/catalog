@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SERP Winners & Losers Detector Output",
+  "type": "object",
+  "required": ["status", "snapshots"],
+  "properties": {
+    "status": { "enum": ["ok", "baseline", "error"] },
+    "keywords_tracked": { "type": "integer" },
+    "keywords_compared": { "type": "integer" },
+    "out_of_topn_convention": { "type": "integer" },
+    "keywords_added": { "type": "array", "items": { "type": "string" } },
+    "keywords_dropped": { "type": "array", "items": { "type": "string" } },
+    "winners": { "type": "array", "items": { "$ref": "#/$defs/mover" } },
+    "losers": { "type": "array", "items": { "$ref": "#/$defs/mover" } },
+    "snapshots": {
+      "type": "object",
+      "description": "keyword -> {domain: position}. Persist and pass back as previous.snapshots.",
+      "additionalProperties": { "type": "object", "additionalProperties": { "type": "integer" } }
+    },
+    "error": { "type": "object", "properties": { "code": { "type": "string" }, "message": { "type": "string" } } }
+  },
+  "$defs": {
+    "mover": {
+      "type": "object",
+      "required": ["domain", "avg_position_change", "visibility_change", "class"],
+      "properties": {
+        "domain": { "type": "string" },
+        "avg_position_change": { "type": "number" },
+        "visibility_change": { "type": "number" },
+        "keywords_gained": { "type": "integer" },
+        "keywords_lost": { "type": "integer" },
+        "top_movements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": { "keyword": { "type": "string" }, "position_delta": { "type": "number" } }
+          }
+        },
+        "class": { "enum": ["winner", "loser"] }
+      }
+    }
+  }
+}
