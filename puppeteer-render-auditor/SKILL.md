@@ -23,7 +23,7 @@ Detect content, links, and metadata that appear ONLY after JavaScript executes, 
   - IF `puppeteer` is installed THEN use its bundled Chromium.
   - ELSE IF env `PUPPETEER_EXECUTABLE_PATH` is set THEN launch that binary.
   - ELSE STOP `error.code="NO_CHROMIUM"`: "Install puppeteer or set PUPPETEER_EXECUTABLE_PATH to a Chrome/Chromium binary."
-- Launch flags MUST include `--no-sandbox --disable-gpu` in containerized environments.
+- Chromium's sandbox stays on by default, which is what you want on a normal machine. Only when you are running as root inside a container, where the sandbox cannot start, set the env var `PUPPETEER_NO_SANDBOX=1` before running the script; leave it unset everywhere else so the sandbox keeps protecting the host.
 
 ## EXPECTED TOOL CALLS (per URL)
 1. RAW: `fetch(url)` (or `page.goto` with JS disabled) → capture `raw_html`.

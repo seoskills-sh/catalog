@@ -91,7 +91,11 @@ async function pool(items, size, fn) {
   const opts = { viewport: args.viewport || "mobile", waitUntil: args.wait_until || "networkidle2", timeout: Number(args.timeout || 15000), block: args.block !== "false" };
   let browser;
   try {
-    browser = await puppeteer.launch({ headless: "new", args: ["--no-sandbox", "--disable-gpu"] });
+    // F78: keep Chromium's sandbox on by default. Only drop it when explicitly
+    // opted in with PUPPETEER_NO_SANDBOX=1, which is needed when running as root
+    // in a container (where the sandbox cannot start), not on a normal machine.
+    const sandboxArgs = process.env.PUPPETEER_NO_SANDBOX === "1" ? ["--no-sandbox"] : [];
+    browser = await puppeteer.launch({ headless: "new", args: [...sandboxArgs, "--disable-gpu"] });
   } catch (e) {
     console.log(JSON.stringify({ status: "error", error: { code: "NO_CHROMIUM", message: String(e).slice(0, 200) } })); process.exit(1);
   }
