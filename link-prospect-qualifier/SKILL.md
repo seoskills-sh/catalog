@@ -1,7 +1,9 @@
 ---
-name: Link Prospect Qualifier
+name: link-prospect-qualifier
 description: Discovers candidate sites for a topic via SERP and competitor-backlink sources, then scores each on relevance, authority, spam risk, and whether it already links to a competitor, returning a qualified outreach list. Use when the user wants link-building prospects, outreach targeting, or to qualify a prospect list at scale.
-category: link-building
+metadata:
+  title: Link Prospect Qualifier
+  category: link-building
 ---
 
 # Link Prospect Qualifier

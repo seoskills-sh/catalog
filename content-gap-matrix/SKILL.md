@@ -1,7 +1,9 @@
 ---
-name: Competitor Content Gap Matrix
+name: content-gap-matrix
 description: Builds each competitor's ranking-keyword set and diffs them against the target's to find shared gaps — terms multiple competitors rank for but the target does not — returning a prioritized gap matrix by volume, overlap, and difficulty. Use when the user wants a content gap analysis, keyword opportunities competitors own, or topic-coverage gaps versus rivals.
-category: competitor-analysis
+metadata:
+  title: Competitor Content Gap Matrix
+  category: competitor-analysis
 ---
 
 # Competitor Content Gap Matrix

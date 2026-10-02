@@ -1,7 +1,9 @@
 ---
-name: Site Migration Auditor
+name: site-migration-auditor
 description: Compares a pre-migration crawl against the live post-migration site to verify that every indexable old URL 301-redirects exactly once to a live, self-canonical equivalent, catching chains, loops, 302s, and 404s while diffing titles, canonicals, structured data, and indexability to score parity and rank traffic-at-risk URLs by GSC clicks. Use when the user is replatforming, launched a migration, sees post-launch traffic drops, or wants to validate redirects and SEO parity around a cutover.
-category: audit
+metadata:
+  title: Site Migration Auditor
+  category: audit
 ---
 
 # Site Migration Auditor

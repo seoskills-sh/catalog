@@ -1,7 +1,9 @@
 ---
-name: BigQuery Log File Analyzer
+name: bigquery-log-analyzer
 description: Analyzes raw server and CDN access logs stored in BigQuery to quantify Googlebot crawl behavior, surface crawl-budget waste, orphaned crawls, and under-crawled priority URLs. Use when the user has logs in BigQuery and asks about crawl budget, Googlebot activity, log-file analysis, wasted crawl, or "what is Google actually crawling".
-category: analytics
+metadata:
+  title: BigQuery Log File Analyzer
+  category: analytics
 ---
 
 # BigQuery Log File Analyzer

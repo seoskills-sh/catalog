@@ -1,7 +1,9 @@
 ---
-name: Heading Structure Auditor
+name: heading-structure-auditor
 description: Crawls each page and reconstructs its H1–H6 tree to check for a single H1, no skipped levels, and keyword-relevant, non-generic headings, returning the corrected outline per page. Use when the user wants a heading/hierarchy audit, semantic-structure check, or to fix H1 and outline problems at scale.
-category: on-page-seo
+metadata:
+  title: Heading Structure Auditor
+  category: on-page-seo
 ---
 
 # Heading Structure Auditor

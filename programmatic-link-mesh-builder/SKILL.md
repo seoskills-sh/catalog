@@ -1,7 +1,9 @@
 ---
-name: Programmatic Link Mesh Builder
+name: programmatic-link-mesh-builder
 description: Models a generated page set as a directed graph, computes PageRank by power iteration and finds orphan and unreachable pages, then proposes a contextual hub-spoke plus related-entity internal-link plan that spreads authority without over-linking and guarantees every money page is reachable. Every proposed link is capped against template link-spam and de-duplicated against existing links. Use when the user wants to build internal links across programmatic pages, fix orphan pages, distribute PageRank, or guarantee money-page reachability at scale.
-category: programmatic-seo
+metadata:
+  title: Programmatic Link Mesh Builder
+  category: programmatic-seo
 ---
 
 # Programmatic Link Mesh Builder

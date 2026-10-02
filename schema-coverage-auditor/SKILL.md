@@ -1,7 +1,9 @@
 ---
-name: On-Page Schema Coverage Auditor
+name: schema-coverage-auditor
 description: Classifies each page's content type and compares the structured data it should carry against what is present and valid, flagging missing, incomplete, or invalid schema and the exact properties to add. Use when the user wants a structured-data coverage audit, rich-result eligibility check, or to find schema gaps across a site.
-category: on-page-seo
+metadata:
+  title: On-Page Schema Coverage Auditor
+  category: on-page-seo
 ---
 
 # On-Page Schema Coverage Auditor

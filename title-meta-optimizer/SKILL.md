@@ -1,7 +1,9 @@
 ---
-name: Title & Meta Pixel Optimizer
+name: title-meta-optimizer
 description: Crawls titles and meta descriptions, measures rendered pixel width for truncation, checks primary-keyword placement, and detects site-wide duplicates, then recommends rewrites that fit the pixel budget. Use when the user wants title-tag and meta-description optimization, truncation checks, or to find duplicate or missing metadata at scale.
-category: on-page-seo
+metadata:
+  title: Title & Meta Pixel Optimizer
+  category: on-page-seo
 ---
 
 # Title & Meta Pixel Optimizer

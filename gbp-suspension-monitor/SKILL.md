@@ -1,7 +1,9 @@
 ---
-name: GBP Suspension Monitor
+name: gbp-suspension-monitor
 description: Polls the Google Business Profile API across locations to detect suspensions, verification loss, and unauthorized edits to NAP, categories, or hours, then alerts on any status change with exact field diffs and a remediation path. Use when the user manages Google Business Profiles and needs suspension monitoring, listing-integrity alerts, or NAP-edit detection.
-category: local-seo
+metadata:
+  title: GBP Suspension Monitor
+  category: local-seo
 ---
 
 # GBP Suspension Monitor

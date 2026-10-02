@@ -1,7 +1,9 @@
 ---
-name: Store Listing CVR Auditor
+name: store-listing-cvr-auditor
 description: Evaluates an App Store or Google Play listing — icon, screenshot sequence, captions, subtitle, description, preview video, and localization — against ASO conversion heuristics and current store guidelines, scoring first-impression clarity and message hierarchy. Returns prioritized CVR fixes and a statistically valid A/B experiment plan (variants, traffic split, success metric, and minimum sample from a power calculation) for the right store mechanism. Use when the user wants a conversion-rate audit of an app listing, screenshot/icon feedback, or a store A/B test plan.
-category: aso
+metadata:
+  title: Store Listing CVR Auditor
+  category: aso
 ---
 
 # Store Listing CVR Auditor

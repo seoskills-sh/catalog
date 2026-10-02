@@ -1,7 +1,9 @@
 ---
-name: Link Reclamation Finder
+name: link-reclamation-finder
 description: Searches for brand mentions that do not link back and identifies backlinks pointing to the site's 404 or redirected URLs, returning reclamation opportunities ranked by referring authority. Use when the user wants unlinked-mention outreach, broken-backlink recovery, or to reclaim lost link equity.
-category: link-building
+metadata:
+  title: Link Reclamation Finder
+  category: link-building
 ---
 
 # Link Reclamation Finder

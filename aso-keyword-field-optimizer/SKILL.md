@@ -1,7 +1,9 @@
 ---
-name: ASO Keyword Field Optimizer
+name: aso-keyword-field-optimizer
 description: Tokenizes an iOS app's title, subtitle, and 100-character keyword field, strips cross-field and stop-word waste, and greedily packs the highest-opportunity terms without repeating any word across fields or localizations. Returns an optimized keyword field per locale (≤100 chars, comma-separated, no spaces) plus the projected keyword-combination coverage gained. Use when the user wants to maximize iOS keyword coverage, fix wasted keyword-field characters, or expand indexable terms across localizations.
-category: aso
+metadata:
+  title: ASO Keyword Field Optimizer
+  category: aso
 ---
 
 # ASO Keyword Field Optimizer

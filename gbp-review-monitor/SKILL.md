@@ -1,7 +1,9 @@
 ---
-name: GBP Review Velocity & Sentiment Monitor
+name: gbp-review-monitor
 description: Pulls reviews per location from the Google Business Profile API and computes review velocity, star trend, response rate, and NLP sentiment and theme extraction, flagging velocity drops, sentiment declines, and unanswered reviews. Use when the user wants review monitoring, reputation tracking, response-rate audits, or competitor review benchmarking across locations.
-category: local-seo
+metadata:
+  title: GBP Review Velocity & Sentiment Monitor
+  category: local-seo
 ---
 
 # GBP Review Velocity & Sentiment Monitor

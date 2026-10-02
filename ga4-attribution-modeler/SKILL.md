@@ -1,7 +1,9 @@
 ---
-name: GA4 Attribution Path Modeler
+name: ga4-attribution-modeler
 description: Reconstructs multi-touch conversion paths from the event-level GA4 BigQuery export and assigns credit across channels with last-click, position-based, and linear models to quantify organic search's assisted-conversion value. Use when the user asks about attribution, assisted conversions, the true value of organic, or "is last-click undercounting SEO".
-category: analytics
+metadata:
+  title: GA4 Attribution Path Modeler
+  category: analytics
 ---
 
 # GA4 Attribution Path Modeler

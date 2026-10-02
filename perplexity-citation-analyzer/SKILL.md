@@ -1,7 +1,9 @@
 ---
-name: Perplexity Citation Analyzer
+name: perplexity-citation-analyzer
 description: Sends a set of target queries to the Perplexity API, parses the cited source URLs from each answer, and aggregates citation frequency by domain and page type to reveal which content earns AI citations. Use when the user asks what sources Perplexity cites, how to get cited by AI answer engines, or wants a citation gap analysis versus competitors.
-category: ai-search
+metadata:
+  title: Perplexity Citation Analyzer
+  category: ai-search
 ---
 
 # Perplexity Citation Analyzer

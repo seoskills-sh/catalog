@@ -1,7 +1,9 @@
 ---
-name: Faceted Navigation Index Planner
+name: faceted-nav-index-planner
 description: Enumerates ecommerce facet and filter URL combinations from a crawl export, joins each to search demand, Googlebot crawl frequency from access logs, index status, and optional GSC clicks, then models crawl-budget waste and emits a per-facet directive of index, canonicalize, noindex, or robots-disallow with a concrete implementation rule. It turns an uncontrolled filter space into a defensible crawl and index policy that protects crawl budget. Use when the user wants to decide which faceted URLs to index, stop a filter crawl trap, or write robots and canonical rules for faceted navigation.
-category: programmatic-seo
+metadata:
+  title: Faceted Navigation Index Planner
+  category: programmatic-seo
 ---
 
 # Faceted Navigation Index Planner

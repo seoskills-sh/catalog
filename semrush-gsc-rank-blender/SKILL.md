@@ -1,7 +1,9 @@
 ---
-name: Semrush-GSC Rank Blender
+name: semrush-gsc-rank-blender
 description: Joins Semrush tracked organic positions (third-party SERP scrape) with Search Console's real per-query impression, click, and position data (first-party truth), resolving the gap between the two into one blended table that flags where the tools disagree beyond a position threshold and where GSC reveals real search demand Semrush is not tracking at all. Use when the user wants to reconcile Semrush rankings against actual Search Console performance, find rank-tracking blind spots, or trust one blended position table instead of two conflicting ones.
-category: integrations
+metadata:
+  title: Semrush-GSC Rank Blender
+  category: integrations
 ---
 
 # Semrush-GSC Rank Blender

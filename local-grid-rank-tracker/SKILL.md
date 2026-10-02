@@ -1,7 +1,9 @@
 ---
-name: Local Grid Rank Tracker
+name: local-grid-rank-tracker
 description: Generates a geographic grid of coordinates around each location and queries localized SERPs at every point to record local-pack and map rankings, producing a proximity heatmap and average grid rank. Use when the user wants geo-grid rank tracking, to see how local visibility drops with distance, or to benchmark local-pack presence across a service area.
-category: local-seo
+metadata:
+  title: Local Grid Rank Tracker
+  category: local-seo
 ---
 
 # Local Grid Rank Tracker

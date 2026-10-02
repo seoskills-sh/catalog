@@ -1,7 +1,9 @@
 ---
-name: SEO Metrics API Orchestrator
+name: seo-metrics-api-orchestrator
 description: Fetches a requested metric set (domain authority, backlinks, keyword volume, difficulty) across whichever vendors are configured (Ahrefs, Semrush, Moz, DataForSEO), coalescing calls so one vendor endpoint that returns several metrics is hit once, enforcing a per-vendor credit budget with backoff, and degrading gracefully to a partial, reasoned result when a vendor is exhausted, unconfigured, or failing. Use when the user wants the same SEO metrics from multiple tools at once, a single source-attributed metric table, or to fetch metrics under a strict API credit budget.
-category: integrations
+metadata:
+  title: SEO Metrics API Orchestrator
+  category: integrations
 ---
 
 # SEO Metrics API Orchestrator

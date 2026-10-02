@@ -1,7 +1,9 @@
 ---
-name: Image SEO Auditor
+name: image-seo-auditor
 description: Crawls each page's images and checks alt-text quality, descriptive filenames, next-gen formats, explicit dimensions, and lazy-loading, flagging missing or duplicate alt text and oversized or legacy-format images. Use when the user wants an image SEO or accessibility audit, to fix missing alt text at scale, or improve image performance signals.
-category: on-page-seo
+metadata:
+  title: Image SEO Auditor
+  category: on-page-seo
 ---
 
 # Image SEO Auditor

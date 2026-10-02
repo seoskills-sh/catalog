@@ -1,7 +1,9 @@
 ---
-name: Internal Link Opportunity Mapper
+name: internal-link-optimizer
 description: Crawls the site, embeds every page, and builds the internal link graph to find semantically related pages that are not yet linked, then recommends contextual internal links with anchor suggestions. Use when the user wants to improve internal linking, distribute link equity, strengthen topic clusters, or fix orphan and under-linked pages.
-category: content
+metadata:
+  title: Internal Link Opportunity Mapper
+  category: content
 ---
 
 # Internal Link Opportunity Mapper

@@ -1,7 +1,9 @@
 ---
-name: Screaming Frog Warehouse Loader
+name: screaming-frog-warehouse-loader
 description: Normalizes Screaming Frog SEO Spider CSV exports (internal_all, response_codes, directives, all_inlinks) into one stable warehouse schema, computes a run-over-run diff of new, changed, and removed URLs against the prior run's row-hash snapshot, and loads only the incremental rows into BigQuery with idempotent inserts so crawl history is queryable as SQL. Use when the user wants to turn recurring Screaming Frog crawls into a queryable warehouse, track crawl trends over time, or diff one crawl against the last without re-crawling.
-category: integrations
+metadata:
+  title: Screaming Frog Warehouse Loader
+  category: integrations
 ---
 
 # Screaming Frog Warehouse Loader

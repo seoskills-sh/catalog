@@ -1,7 +1,9 @@
 ---
-name: Index Bloat Pruning Auditor
+name: index-bloat-pruning-auditor
 description: Scores every indexed URL on search value (GSC clicks/impressions/position), engagement (GA4), internal links (crawl), and crawl cost (Googlebot log hits) to isolate the zero-value and redundant pages inflating the index, then recommends a per-URL action — keep, consolidate, noindex, or remove-410 — with the consolidation target and the projected crawl-efficiency gain. Use when the user asks about index bloat, thin or zero-traffic pages, crawl-budget waste, pruning or content consolidation, or "which pages should I noindex/delete".
-category: audit
+metadata:
+  title: Index Bloat Pruning Auditor
+  category: audit
 ---
 
 # Index Bloat Pruning Auditor

@@ -1,7 +1,9 @@
 ---
-name: GEO Brand Mention Tracker
+name: geo-brand-mention-tracker
 description: Runs a defined prompt set through multiple LLM APIs on a schedule and detects whether a brand is mentioned, linked, and how it is framed, tracking presence rate, sentiment, and factual accuracy per engine over time. Use when the user asks how AI assistants describe their brand, whether ChatGPT/Gemini/Claude recommend them, or wants Generative Engine Optimization (GEO) monitoring. Supersedes the legacy geo-brand-mentions skill.
-category: ai-search
+metadata:
+  title: GEO Brand Mention Tracker
+  category: ai-search
 ---
 
 # GEO Brand Mention Tracker

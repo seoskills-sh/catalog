@@ -1,7 +1,9 @@
 ---
-name: Multi-Location Landing Page Auditor
+name: local-landing-page-auditor
 description: Crawls every location and store-locator page and validates LocalBusiness schema, embedded map, NAP parity with GBP, and content uniqueness across locations, flagging thin or duplicated pages, missing schema fields, and crawl issues. Use when the user has many location pages and wants a programmatic local landing-page audit at scale.
-category: local-seo
+metadata:
+  title: Multi-Location Landing Page Auditor
+  category: local-seo
 ---
 
 # Multi-Location Landing Page Auditor

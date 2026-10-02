@@ -1,7 +1,9 @@
 ---
-name: Striking Distance Opportunity Finder
+name: striking-distance-finder
 description: Surfaces "striking distance" keywords ranking in Search Console positions 11-20 with real impression demand, ranks them by projected click uplift, and maps each to its URL and likely on-page gap. Use when the user asks for quick SEO wins, page-two keywords, low-hanging fruit, or "what should I optimize next".
-category: analytics
+metadata:
+  title: Striking Distance Opportunity Finder
+  category: analytics
 ---
 
 # Striking Distance Opportunity Finder

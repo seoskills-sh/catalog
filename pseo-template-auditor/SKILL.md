@@ -1,7 +1,9 @@
 ---
-name: Programmatic Template Auditor
+name: pseo-template-auditor
 description: Samples pages from one programmatic template, computes a 64-bit SimHash over word-shingles for each page, clusters near-duplicates by Hamming distance, extracts the shared boilerplate shingle set, and quantifies the unique-token budget every page actually adds. It flags thin pages, near-duplicate clusters, and boilerplate-dominant doorway pages so you learn whether a template mints unique value or sprays duplicates. Use when the user wants to check a pSEO template for thin or duplicate output, find near-duplicate pages, or prove a template is not a doorway before scaling it.
-category: programmatic-seo
+metadata:
+  title: Programmatic Template Auditor
+  category: programmatic-seo
 ---
 
 # Programmatic Template Auditor

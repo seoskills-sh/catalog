@@ -1,7 +1,9 @@
 ---
-name: Ahrefs-GSC Backlink Reconciler
+name: ahrefs-gsc-backlink-reconciler
 description: Pulls referring domains from the Ahrefs API v3, reads the Search Console "Top linking sites" CSV export (Search Console has no links API, so the manual export is the honest first-party source), optionally adds Semrush, normalizes every host to its registrable domain, and reconciles the sources into one authoritative link set with per-domain source attribution, coverage stats, gained/lost domains since the last run, and discrepancies worth manual verification. Use when the user wants to merge Ahrefs and Search Console backlink data, find referring domains one tool misses, or audit link gains and losses across tools.
-category: integrations
+metadata:
+  title: Ahrefs-GSC Backlink Reconciler
+  category: integrations
 ---
 
 # Ahrefs-GSC Backlink Reconciler

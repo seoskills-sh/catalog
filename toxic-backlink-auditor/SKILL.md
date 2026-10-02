@@ -1,7 +1,9 @@
 ---
-name: Toxic Backlink Auditor
+name: toxic-backlink-auditor
 description: Fetches the site's referring domains and scores each for toxicity from spam signals such as link farms, irrelevant TLDs, sitewide footer links, unnatural velocity, and over-optimized anchors, outputting a prioritized disavow-candidate list. Use when the user wants a backlink risk audit, disavow file preparation, or to assess penalty exposure.
-category: link-building
+metadata:
+  title: Toxic Backlink Auditor
+  category: link-building
 ---
 
 # Toxic Backlink Auditor

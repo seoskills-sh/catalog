@@ -1,7 +1,9 @@
 ---
-name: GSC CTR Anomaly Detector
+name: gsc-ctr-anomaly-detector
 description: Pulls query-level performance from Search Console and flags queries whose actual click-through rate deviates significantly from the expected CTR for their average position, isolating title, meta, or SERP-feature causes. Use when the user asks why clicks are low despite rankings, wants CTR optimization targets, or title/meta rewrite priorities.
-category: keyword-research
+metadata:
+  title: GSC CTR Anomaly Detector
+  category: keyword-research
 ---
 
 # GSC CTR Anomaly Detector

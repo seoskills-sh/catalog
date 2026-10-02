@@ -1,7 +1,9 @@
 ---
-name: Hreflang Network Validator
+name: hreflang-network-validator
 description: Crawls a set of URLs, builds the full hreflang graph across every language and region variant, and validates bidirectional return tags, self-references, locale codes, and canonical/status consistency. Use when the user runs an international/multilingual site and asks about hreflang errors, wrong-language results, or return-tag problems.
-category: technical-seo
+metadata:
+  title: Hreflang Network Validator
+  category: technical-seo
 ---
 
 # Hreflang Network Validator

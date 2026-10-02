@@ -1,7 +1,9 @@
 ---
-name: Audit Remediation Prioritizer
+name: audit-remediation-prioritizer
 description: Ingests raw findings from any audit source (the JSON emitted by the other native audit skills, or a flat finding list), normalises the heterogeneous shapes into one finding model, deduplicates and groups them by type, and scores each by traffic-at-stake, impact, confidence, and effort (RICE or ICE) using real GSC/GA4 signals where available, then outputs a phase-sequenced remediation roadmap with owners, effort, and score plus ready-to-file ticket payloads. Use when the user has audit output to turn into a prioritized action plan, wants a RICE/ICE-scored roadmap, or asks "what do we fix first" instead of an undifferentiated issue dump.
-category: audit
+metadata:
+  title: Audit Remediation Prioritizer
+  category: audit
 ---
 
 # Audit Remediation Prioritizer

@@ -1,7 +1,9 @@
 ---
-name: Crawl-Trap & Facet Detector
+name: crawl-trap-detector
 description: Crawls a site with bounded BFS while modeling URL parameter and facet combinations to detect exponentially expanding, near-duplicate URL spaces such as faceted navigation, calendar loops, and session-ID paths, then recommends robots or canonical containment. Use when the user reports crawl-budget waste, index bloat, infinite URLs, or too many parameterized pages.
-category: technical-seo
+metadata:
+  title: Crawl-Trap & Facet Detector
+  category: technical-seo
 ---
 
 # Crawl-Trap & Facet Detector

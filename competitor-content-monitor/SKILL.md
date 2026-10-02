@@ -1,7 +1,9 @@
 ---
-name: Competitor Content Cadence Monitor
+name: competitor-content-monitor
 description: Periodically diffs each competitor's sitemap and content to detect newly published and materially updated URLs, extracting topic and dates, then surfaces content velocity and the topics competitors are investing in. Use when the user wants to monitor competitor content, spot new competitor pages, or track publishing cadence over time.
-category: competitor-analysis
+metadata:
+  title: Competitor Content Cadence Monitor
+  category: competitor-analysis
 ---
 
 # Competitor Content Cadence Monitor

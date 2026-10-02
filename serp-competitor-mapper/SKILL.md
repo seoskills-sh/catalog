@@ -1,7 +1,9 @@
 ---
-name: SERP Competitor Landscape Mapper
+name: serp-competitor-mapper
 description: Fetches SERPs for a keyword universe and tallies each domain's ranking positions to compute SERP presence and average position, returning the true organic competitor landscape ranked by weighted SERP share. Use when the user wants to identify real organic competitors, map the SERP landscape, or find who to benchmark against.
-category: competitor-analysis
+metadata:
+  title: SERP Competitor Landscape Mapper
+  category: competitor-analysis
 ---
 
 # SERP Competitor Landscape Mapper

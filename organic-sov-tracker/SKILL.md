@@ -1,7 +1,9 @@
 ---
-name: Organic Share-of-Voice Tracker
+name: organic-sov-tracker
 description: Tracks rankings for a keyword universe and computes each domain's organic share of voice weighted by position CTR and search volume, trending share over time and attributing gains and losses to keyword clusters. Use when the user wants organic SoV, competitive visibility benchmarking, or to see who is winning share in a market.
-category: competitor-analysis
+metadata:
+  title: Organic Share-of-Voice Tracker
+  category: competitor-analysis
 ---
 
 # Organic Share-of-Voice Tracker
