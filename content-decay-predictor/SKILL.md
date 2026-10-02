@@ -1,7 +1,9 @@
 ---
-name: Content Decay Predictor
+name: content-decay-predictor
 description: Builds per-URL clicks and impressions time-series from Search Console, fits a trend to detect sustained decline and inflection points, and predicts which pages will keep decaying ranked by projected click loss. Use when the user asks which content to refresh, what pages are losing traffic, or wants a proactive content-refresh queue.
-category: content
+metadata:
+  title: Content Decay Predictor
+  category: content
 ---
 
 # Content Decay Predictor

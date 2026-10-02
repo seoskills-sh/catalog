@@ -1,7 +1,9 @@
 ---
-name: Zero-Click Risk Scorer
+name: zero-click-risk-scorer
 description: Analyzes each keyword's live SERP for click-absorbing features and scores its zero-click risk, then reprioritizes the keyword list toward terms that still send organic clicks. Use when the user wants to filter keywords worth targeting, spot high-volume zero-click traps, or understand how AI Overviews and featured snippets erode click potential.
-category: keyword-research
+metadata:
+  title: Zero-Click Risk Scorer
+  category: keyword-research
 ---
 
 # Zero-Click Risk Scorer

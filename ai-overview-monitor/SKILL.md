@@ -1,7 +1,9 @@
 ---
-name: AI Overview Citation Monitor
+name: ai-overview-monitor
 description: Queries a keyword set through a SERP API that captures Google AI Overview (SGE) blocks, extracts the cited URLs and snippet text, and reports AI Overview trigger rate per keyword and whether the brand is cited versus competitors. Use when the user asks about Google AI Overviews, SGE visibility, being cited in AI Overviews, or losing clicks to AI answers.
-category: ai-search
+metadata:
+  title: AI Overview Citation Monitor
+  category: ai-search
 ---
 
 # AI Overview Citation Monitor

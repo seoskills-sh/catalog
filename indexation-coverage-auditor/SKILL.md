@@ -1,7 +1,9 @@
 ---
-name: Indexation Coverage Auditor
+name: indexation-coverage-auditor
 description: Joins the XML sitemap set, GSC index-coverage / URL-Inspection states, a fresh crawl, and analytics traffic into one URL ledger and classifies every page (indexed-earning, submitted-not-indexed, discovered-not-indexed, excluded-crawled, orphaned-earning), then groups the indexation gaps by root cause with the single most likely fix per cluster. Use when the user asks why pages are not indexed, wants to reconcile sitemap vs GSC coverage vs crawl, sees "Discovered/Crawled - currently not indexed", or is auditing index coverage.
-category: audit
+metadata:
+  title: Indexation Coverage Auditor
+  category: audit
 ---
 
 # Indexation Coverage Auditor

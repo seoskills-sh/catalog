@@ -1,7 +1,9 @@
 ---
-name: Entity Knowledge-Graph Optimizer
+name: entity-kg-optimizer
 description: Queries the Google Knowledge Graph and Wikidata to assess how well a brand entity is defined, connected, and disambiguated, then recommends schema, sameAs, and corroborating-source fixes to strengthen entity grounding for AI answers. Use when the user asks about entity SEO, knowledge panels, being understood by AI, or improving how LLMs identify their brand.
-category: ai-search
+metadata:
+  title: Entity Knowledge-Graph Optimizer
+  category: ai-search
 ---
 
 # Entity Knowledge-Graph Optimizer

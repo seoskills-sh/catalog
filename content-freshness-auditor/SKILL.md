@@ -1,7 +1,9 @@
 ---
-name: Content Freshness Auditor
+name: content-freshness-auditor
 description: Crawls content and detects staleness signals — old publish and modified dates, outdated years and statistics, deprecated references, and recency gaps versus ranking competitors — flagging pages and the exact outdated claims to update. Use when the user wants to find stale content, prioritize updates, or catch outdated facts hurting rankings.
-category: content
+metadata:
+  title: Content Freshness Auditor
+  category: content
 ---
 
 # Content Freshness Auditor

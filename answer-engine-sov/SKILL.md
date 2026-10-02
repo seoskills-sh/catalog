@@ -1,7 +1,9 @@
 ---
-name: Answer Engine Share-of-Voice Reporter
+name: answer-engine-sov
 description: Runs a category prompt set across multiple answer engines and tallies citations and mentions for the brand and each named competitor to compute share-of-voice per engine and per topic cluster. Use when the user wants competitive AI visibility benchmarking, share of voice in ChatGPT/Perplexity/Gemini answers, or to see who dominates AI answers in their category.
-category: ai-search
+metadata:
+  title: Answer Engine Share-of-Voice Reporter
+  category: ai-search
 ---
 
 # Answer Engine Share-of-Voice Reporter

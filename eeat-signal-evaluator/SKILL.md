@@ -1,7 +1,9 @@
 ---
-name: E-E-A-T Signal Evaluator
+name: eeat-signal-evaluator
 description: Crawls a page and extracts E-E-A-T signals — author identity and credentials, citations, first-hand experience markers, freshness, and external corroboration — scoring each via NLP and entity lookups into a per-signal scorecard. Use when the user asks how to improve trust and authority, audit YMYL content, or find missing E-E-A-T elements.
-category: content
+metadata:
+  title: E-E-A-T Signal Evaluator
+  category: content
 ---
 
 # E-E-A-T Signal Evaluator

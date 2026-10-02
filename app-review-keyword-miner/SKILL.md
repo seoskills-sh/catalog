@@ -1,7 +1,9 @@
 ---
-name: App Review Keyword Miner
+name: app-review-keyword-miner
 description: Pulls App Store (RSS) and Google Play reviews, extracts the real vocabulary users use plus recurring feature requests and complaints, and clusters them into themes by lexicon sentiment and rating impact. Surfaces high-intent keyword candidates for the store listing and a themed issue log ranked by frequency and star impact. Use when the user wants review-mined keywords, voice-of-customer themes, feature-request triage, or complaint clustering for an app.
-category: aso
+metadata:
+  title: App Review Keyword Miner
+  category: aso
 ---
 
 # App Review Keyword Miner

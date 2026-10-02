@@ -1,7 +1,9 @@
 ---
-name: ASO Competitor Keyword Gap
+name: aso-competitor-keyword-gap
 description: Profiles a target app and its competitors on the App Store, deriving or fetching each app's indexed keyword set, category rank, and listing metadata, then diffs the term sets to expose keyword gaps, overlaps, and your unique terms. Stateful via --previous, it detects competitor title/subtitle/screenshot/description changes over time and reports the keyword rank shifts that follow. Use when the user wants competitor keyword gaps, ASO metadata-change monitoring, or to see which terms rivals rank for that you miss.
-category: aso
+metadata:
+  title: ASO Competitor Keyword Gap
+  category: aso
 ---
 
 # ASO Competitor Keyword Gap

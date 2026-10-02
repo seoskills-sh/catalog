@@ -1,7 +1,9 @@
 ---
-name: Backlink Gap Analyzer
+name: backlink-gap-analyzer
 description: Pulls referring domains for the target and a set of competitors from a backlink API and computes the set difference, returning domains that link to multiple competitors but not the target, ranked by authority and relevance. Use when the user wants a link gap analysis, competitor backlink intersection, or a prioritized outreach target list.
-category: link-building
+metadata:
+  title: Backlink Gap Analyzer
+  category: link-building
 ---
 
 # Backlink Gap Analyzer

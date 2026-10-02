@@ -1,7 +1,9 @@
 ---
-name: Canonicalization Auditor
+name: canonicalization-auditor
 description: Crawls a site to collect each URL's rel=canonical, hreflang set, redirect target, robots directives, and sitemap membership, then detects the contradictions that make Google discard a canonical hint — canonical-to-noindex, canonical-to-redirect, canonical chains, noindex-plus-canonical on one page, canonicalized-away-but-in-sitemap, duplicate clusters with no chosen canonical, and non-reciprocal or invalid hreflang. Use when the user has duplicate-content or canonical problems, hreflang errors, "Google chose a different canonical", or conflicting index signals to untangle.
-category: audit
+metadata:
+  title: Canonicalization Auditor
+  category: audit
 ---
 
 # Canonicalization Auditor

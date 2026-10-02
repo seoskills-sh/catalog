@@ -1,7 +1,9 @@
 ---
-name: GSC Bulk Export Manager
+name: gsc-bulk-export-manager
 description: Validates that Search Console's daily Bulk Data Export to BigQuery is configured, then runs partitioned, parameterized queries over the full unsampled export tables (searchdata_url_impression / searchdata_site_impression) to deliver analyses the 16-month UI cannot, a complete query inventory, page-by-query click decay between two windows, and daily anomaly detection, with every query dry-run and gated by a bytes-scanned cost guard before it can bill. Use when the user has the GSC BigQuery bulk export and wants full unsampled query data, decay analysis, anomaly windows, or a cost-safe way to query the export.
-category: integrations
+metadata:
+  title: GSC Bulk Export Manager
+  category: integrations
 ---
 
 # GSC Bulk Export Manager

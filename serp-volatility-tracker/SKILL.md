@@ -1,7 +1,9 @@
 ---
-name: SERP Feature Volatility Tracker
+name: serp-volatility-tracker
 description: Snapshots each keyword's SERP features and top rankings on a schedule and computes a volatility score from period-over-period churn, flagging keywords whose SERP composition is destabilizing before rankings move. Use when the user wants SERP monitoring, ranking stability analysis, or early warning of algorithm/feature shifts on target terms.
-category: keyword-research
+metadata:
+  title: SERP Feature Volatility Tracker
+  category: keyword-research
 ---
 
 # SERP Feature Volatility Tracker

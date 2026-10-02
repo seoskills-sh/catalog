@@ -1,7 +1,9 @@
 ---
-name: Multi-Location NAP Consistency Crawler
+name: nap-consistency-crawler
 description: Crawls the site's location pages and major citation directories to extract each location's name, address, and phone, then normalizes and diffs them to flag inconsistencies, formatting drift, and missing citations. Use when the user manages multiple locations and needs NAP consistency auditing, citation cleanup, or local-listing accuracy checks.
-category: local-seo
+metadata:
+  title: Multi-Location NAP Consistency Crawler
+  category: local-seo
 ---
 
 # Multi-Location NAP Consistency Crawler

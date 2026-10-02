@@ -1,7 +1,9 @@
 ---
-name: Programmatic Page Inventory Planner
+name: pseo-page-inventory-planner
 description: Demand-validates every {modifier} x {entity} combination before you generate programmatic pages by fetching search volume and competition from DataForSEO and joining Search Console to spot entities you already rank for, then scores each candidate for viability and projects its traffic. Returns a ranked build / skip / defer / exists inventory that prunes zero-demand combos so a template cannot spray thin pages into the index. Use when the user wants to plan a pSEO page set, validate modifier-entity demand, or decide which programmatic pages are worth building.
-category: programmatic-seo
+metadata:
+  title: Programmatic Page Inventory Planner
+  category: programmatic-seo
 ---
 
 # Programmatic Page Inventory Planner

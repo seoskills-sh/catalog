@@ -1,7 +1,9 @@
 ---
-name: Search Console Cannibalization Analyzer
+name: gsc-cannibalization-analyzer
 description: Detects keyword cannibalization by pulling query-and-page data from the Google Search Console API and clustering queries where multiple URLs compete and swap positions. Use when the user asks about cannibalization, multiple pages ranking for one keyword, "which page should rank", or unstable/fluctuating rankings for a term.
-category: analytics
+metadata:
+  title: Search Console Cannibalization Analyzer
+  category: analytics
 ---
 
 # Search Console Cannibalization Analyzer

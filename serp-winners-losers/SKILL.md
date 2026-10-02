@@ -1,7 +1,9 @@
 ---
-name: SERP Winners & Losers Detector
+name: serp-winners-losers
 description: Compares ranking snapshots for a keyword set across two periods and computes each domain's net position change and keyword-count movement, flagging the biggest winners and losers and the keywords driving each. Use when the user wants to detect ranking movement after an update, see who gained or lost visibility, or diagnose winners and losers in a niche.
-category: competitor-analysis
+metadata:
+  title: SERP Winners & Losers Detector
+  category: competitor-analysis
 ---
 
 # SERP Winners & Losers Detector

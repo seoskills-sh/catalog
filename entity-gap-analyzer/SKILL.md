@@ -1,7 +1,9 @@
 ---
-name: TF-IDF Entity Gap Analyzer
+name: entity-gap-analyzer
 description: Extracts weighted entities and TF-IDF terms from the top-ranking pages for a target query and diffs them against the user's page, returning the missing and under-weighted topics to add ranked by competitor coverage. Use when the user asks how to improve content depth, close a topical gap versus competitors, or what entities and subtopics a page is missing.
-category: content
+metadata:
+  title: TF-IDF Entity Gap Analyzer
+  category: content
 ---
 
 # TF-IDF Entity Gap Analyzer

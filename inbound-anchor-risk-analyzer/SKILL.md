@@ -1,7 +1,9 @@
 ---
-name: Inbound Anchor Risk Analyzer
+name: inbound-anchor-risk-analyzer
 description: Pulls the distribution of inbound anchor text across all referring domains and classifies it into branded, exact-match, partial, generic, and URL anchors, flagging unnatural exact-match ratios and spikes that signal over-optimization risk. Use when the user wants an anchor-text profile audit, penalty-risk assessment, or a natural anchor-ratio target.
-category: link-building
+metadata:
+  title: Inbound Anchor Risk Analyzer
+  category: link-building
 ---
 
 # Inbound Anchor Risk Analyzer

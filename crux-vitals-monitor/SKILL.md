@@ -1,7 +1,9 @@
 ---
-name: Core Web Vitals CrUX Monitor
+name: crux-vitals-monitor
 description: Polls the Chrome UX Report (CrUX) API for real-user field LCP, INP, and CLS by URL and device, classifies each against Google's thresholds, and detects regressions versus a stored baseline. Use when the user asks about field Core Web Vitals, real-user performance, passing CWV, or wants ongoing performance-regression monitoring.
-category: technical-seo
+metadata:
+  title: Core Web Vitals CrUX Monitor
+  category: technical-seo
 ---
 
 # Core Web Vitals CrUX Monitor

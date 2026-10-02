@@ -1,7 +1,9 @@
 ---
-name: GA4 Anomaly Detector
+name: ga4-anomaly-detector
 description: Detects statistically significant anomalies in GA4 organic traffic and conversions by pulling daily metrics from the GA4 Data API and applying seasonality-aware robust decomposition. Use when the user asks why traffic/conversions dropped or spiked, wants automated GA4 monitoring, or says "traffic anomaly", "unexplained drop", or "is this change real".
-category: analytics
+metadata:
+  title: GA4 Anomaly Detector
+  category: analytics
 ---
 
 # GA4 Anomaly Detector

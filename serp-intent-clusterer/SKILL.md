@@ -1,7 +1,9 @@
 ---
-name: N-gram SERP Intent Clusterer
+name: serp-intent-clusterer
 description: Clusters a keyword list by the overlap of their live SERP results and fuses n-gram intent signals, then labels each cluster's dominant intent and its single canonical target page. Use when the user needs keyword grouping, topic clusters, intent mapping, or wants to know which keywords should share one page.
-category: keyword-research
+metadata:
+  title: N-gram SERP Intent Clusterer
+  category: keyword-research
 ---
 
 # N-gram SERP Intent Clusterer

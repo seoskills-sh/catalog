@@ -1,7 +1,9 @@
 ---
-name: Redirect Chain Mapper
+name: redirect-chain-mapper
 description: Follows every redirect hop for a list of URLs to map full chains, loops, and mixed 301/302 usage, then flags chains longer than one hop, redirects to non-200 endpoints, and conflicts between the final URL and its canonical tag. Use when the user audits redirects, site migrations, redirect chains/loops, or lost link equity.
-category: technical-seo
+metadata:
+  title: Redirect Chain Mapper
+  category: technical-seo
 ---
 
 # Redirect Chain Mapper

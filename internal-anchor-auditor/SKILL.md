@@ -1,7 +1,9 @@
 ---
-name: Internal Anchor Text Auditor
+name: internal-anchor-auditor
 description: Crawls the site and aggregates the internal anchor text pointing to each destination page, classifying anchors as exact-match, partial, branded, or generic and flagging over-optimization and generic overuse. Use when the user wants an internal-linking anchor audit, to fix over-optimized internal anchors, or improve anchor relevance at scale.
-category: on-page-seo
+metadata:
+  title: Internal Anchor Text Auditor
+  category: on-page-seo
 ---
 
 # Internal Anchor Text Auditor

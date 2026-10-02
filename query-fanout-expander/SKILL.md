@@ -1,7 +1,9 @@
 ---
-name: Query Fan-Out Expander
+name: query-fanout-expander
 description: Recursively expands seed terms through Google Autocomplete, People-Also-Ask, and related searches to reconstruct the query fan-out network AI engines decompose queries into, then deduplicates and clusters by intent. Use when the user wants exhaustive query discovery, topic coverage, People-Also-Ask mining, or the sub-questions a topic must answer for AI search.
-category: keyword-research
+metadata:
+  title: Query Fan-Out Expander
+  category: keyword-research
 ---
 
 # Query Fan-Out Expander

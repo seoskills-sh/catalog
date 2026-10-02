@@ -1,7 +1,9 @@
 ---
-name: Product Feed SEO Optimizer
+name: product-feed-seo-optimizer
 description: Audits a Google Merchant product feed for title quality, attribute completeness, and GTIN/identifier validity using the real GS1 mod-10 check digit, generates recommended Product JSON-LD, cross-checks Merchant Center disapprovals through the Content API for Shopping, and rewrites titles to a demand-informed pattern. It returns a per-product diff plus schema fixes that serve both organic search and Shopping surfaces. Use when the user wants to optimize a product feed, validate GTINs, fix Merchant Center disapprovals, or rewrite product titles for organic and Shopping.
-category: programmatic-seo
+metadata:
+  title: Product Feed SEO Optimizer
+  category: programmatic-seo
 ---
 
 # Product Feed SEO Optimizer

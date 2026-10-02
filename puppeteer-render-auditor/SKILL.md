@@ -1,7 +1,9 @@
 ---
-name: Puppeteer JS Rendering Auditor
+name: puppeteer-render-auditor
 description: Loads each URL as raw HTML and as a fully JavaScript-rendered DOM via headless Chrome, then diffs content, links, and metadata to flag anything an agent-crawler would miss before render. Use when the user suspects client-side-rendering indexation problems, asks "does Google see my JS content", or audits an SPA/React/Vue site for crawlability.
-category: technical-seo
+metadata:
+  title: Puppeteer JS Rendering Auditor
+  category: technical-seo
 ---
 
 # Puppeteer JS Rendering Auditor

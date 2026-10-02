@@ -1,7 +1,9 @@
 ---
-name: App Keyword Rank Tracker
+name: app-keyword-rank-tracker
 description: Records an app's keyword positions across the App Store (keyless iTunes Search) and Google Play (ASO rank API) and across locales, persisting history via --previous for velocity and volatility. Reports ranking movers, newly ranking and lost keywords, and per-keyword trend metrics — and returns an honest baseline on the first run instead of fabricated deltas. Use when the user wants daily app keyword rank tracking, ranking movers, or velocity and volatility across both stores.
-category: aso
+metadata:
+  title: App Keyword Rank Tracker
+  category: aso
 ---
 
 # App Keyword Rank Tracker
