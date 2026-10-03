@@ -18,11 +18,13 @@ Quantify each brand's Share of Voice (SoV) across answer engines for a category:
 - `prompts` (REQUIRED): array of `{ text, cluster }` — buyer/category questions grouped by topic cluster.
 - `engines` (OPTIONAL): subset of `["openai","anthropic","gemini","perplexity"]`. Default all configured.
 - `weighting` (OPTIONAL enum `mention|citation|first_mention`): how a "voice" is counted. Default `mention`.
+- `models` (OPTIONAL via `--model ENGINE=ID`, repeatable): override an engine's default model, for example `--model openai=chat-latest` (the Instant model ChatGPT uses).
 
 ## AUTHENTICATION (per engine)
 - Env keys: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `PERPLEXITY_API_KEY`.
 - IF an engine's key is missing THEN skip it → `skipped_engines[]`. IF none configured THEN STOP `error.code="NO_ENGINE_CREDENTIALS"`.
-- Same endpoints as the GEO Brand Mention Tracker; `temperature=0`.
+- Same endpoints and default models as the GEO Brand Mention Tracker: OpenAI `gpt-6.1-sol`, Anthropic `claude-sonnet-5-5`, Gemini `gemini-3.8-flash`, Perplexity `sonar`. The output's `models` records the models used, so runs stay comparable.
+- `temperature=0` goes to Perplexity only. Current OpenAI, Anthropic and Gemini models reject a non-default temperature or advise against it, so their answers vary between runs: compare SoV across runs and prompts, not single answers.
 
 ## EXPECTED TOOL CALLS
 - Run `scripts/share_of_voice.py --brands brands.json --prompts prompts.json`.
@@ -40,8 +42,8 @@ STEP 5 — OVERALL: sum voices across engines & prompts → `overall_sov` leader
 STEP 6 — EMIT with per-engine, per-cluster, and overall breakdowns.
 
 ## RATE LIMITS & ERROR HANDLING
-- Per-engine backoff on `429` (honor `Retry-After`, else `2^attempt`, max 5); a rate-limited (engine,prompt) is recorded and excluded from denominators (`counted=false`) rather than dropped silently.
-- `5xx`/timeout retry ≤3 then mark that cell `engine_error`, excluded from denominators.
+- Per-engine backoff on `429` (honor `Retry-After`, else `2^attempt`, max 5); after that the cell counts as `rate_limited` in `failed_cells[engine]` and is excluded from denominators, never dropped silently.
+- `5xx`/timeout (120s) retry ≤3, then the cell counts as `engine_error_<status>` in `failed_cells[engine]`; an empty answer counts as `empty_answer`. Both are excluded from denominators. `engine_error_404` on every cell usually means the vendor retired the model: override it with `--model`.
 - Concurrency ≤ 3 per engine.
 
 ## MISSING / INSUFFICIENT DATA

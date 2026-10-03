@@ -5,16 +5,21 @@ Auth:   OPENAI_API_KEY / ANTHROPIC_API_KEY / GEMINI_API_KEY / PERPLEXITY_API_KEY
 Output: JSON on stdout per ../references/output.schema.json. Std-lib only.
 
 Usage: python3 track_mentions.py --brand brand.json --prompts prompts.json \
-       [--engines openai,anthropic,gemini,perplexity] [--facts facts.json]
+       [--engines openai,anthropic,gemini,perplexity] [--facts facts.json] [--model openai=chat-latest]
 """
 from __future__ import annotations
 import argparse, json, os, re, sys, time, urllib.request, urllib.error
 
+# Default model per engine. Vendors retire models (Google shut down
+# gemini-1.5-pro on 2025-09-29; Anthropic retired claude-3-5-sonnet on
+# 2025-10-28), so --model ENGINE=ID swaps one without a code change.
+MODELS = {"openai": "gpt-6.1-sol", "anthropic": "claude-sonnet-5-5",
+          "gemini": "gemini-3.8-flash", "perplexity": "sonar"}
 POS = re.compile(r"\b(best|recommend|top|leading|excellent|great|trusted|popular|ideal|go-to)\b", re.I)
 NEG = re.compile(r"\b(avoid|worst|poor|caution|however|but|lacks?|limited|complaints?|not recommended|downside)\b", re.I)
 
 
-def post(url, headers, payload, timeout=60):
+def post(url, headers, payload, timeout=120):
     data = json.dumps(payload).encode()
     req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json", **headers})
     for attempt in range(6):
@@ -37,36 +42,53 @@ def post(url, headers, payload, timeout=60):
     return 429, {}, {}
 
 
-def call_engine(engine, prompt):
-    """Returns (status, answer_text, citations)."""
+def call_engine(engine, prompt, model):
+    """Returns (status, answer_text, citations).
+
+    temperature=0 goes to Perplexity only: current OpenAI, Anthropic and Gemini
+    models reject a non-default temperature or advise against it.
+    """
     if engine == "openai":
         k = os.environ["OPENAI_API_KEY"]
         s, r, _ = post("https://api.openai.com/v1/chat/completions", {"Authorization": f"Bearer {k}"},
-                       {"model": "gpt-4o", "temperature": 0, "messages": [{"role": "user", "content": prompt}]})
+                       {"model": model, "messages": [{"role": "user", "content": prompt}]})
         return s, (r.get("choices", [{}])[0].get("message", {}).get("content", "") if s == 200 else ""), []
     if engine == "anthropic":
         k = os.environ["ANTHROPIC_API_KEY"]
+        # Thinking is on by default and counts toward max_tokens; keep text blocks only.
         s, r, _ = post("https://api.anthropic.com/v1/messages",
                        {"x-api-key": k, "anthropic-version": "2023-06-01"},
-                       {"model": "claude-3-5-sonnet-latest", "max_tokens": 1024, "temperature": 0,
+                       {"model": model, "max_tokens": 8192,
                         "messages": [{"role": "user", "content": prompt}]})
-        text = "".join(b.get("text", "") for b in r.get("content", [])) if s == 200 else ""
+        text = "".join(b.get("text", "") for b in r.get("content", []) if b.get("type") == "text") if s == 200 else ""
         return s, text, []
     if engine == "gemini":
         k = os.environ["GEMINI_API_KEY"]
-        s, r, _ = post(f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={k}",
-                       {}, {"contents": [{"parts": [{"text": prompt}]}], "generationConfig": {"temperature": 0}})
+        s, r, _ = post(f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={k}",
+                       {}, {"contents": [{"parts": [{"text": prompt}]}]})
         text = ""
         if s == 200:
-            text = "".join(p.get("text", "") for p in r.get("candidates", [{}])[0].get("content", {}).get("parts", []))
+            parts = r.get("candidates", [{}])[0].get("content", {}).get("parts", [])
+            text = "".join(p.get("text", "") for p in parts if not p.get("thought"))
         return s, text, []
     if engine == "perplexity":
         k = os.environ["PERPLEXITY_API_KEY"]
         s, r, _ = post("https://api.perplexity.ai/chat/completions", {"Authorization": f"Bearer {k}"},
-                       {"model": "sonar", "temperature": 0, "messages": [{"role": "user", "content": prompt}]})
+                       {"model": model, "temperature": 0, "messages": [{"role": "user", "content": prompt}]})
         text = r.get("choices", [{}])[0].get("message", {}).get("content", "") if s == 200 else ""
         return s, text, r.get("citations", []) if s == 200 else []
     return 0, "", []
+
+
+def parse_models(overrides):
+    """MODELS with any --model ENGINE=ID overrides applied; None if one is malformed."""
+    models = dict(MODELS)
+    for o in overrides:
+        engine, _, model = o.partition("=")
+        if engine not in MODELS or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]*", model):
+            return None
+        models[engine] = model
+    return models
 
 
 def mention_sentence(text, terms):
@@ -88,9 +110,16 @@ def main():
     ap.add_argument("--brand", required=True); ap.add_argument("--prompts", required=True)
     ap.add_argument("--engines", default="openai,anthropic,gemini,perplexity")
     ap.add_argument("--facts")
+    ap.add_argument("--model", action="append", default=[], metavar="ENGINE=ID",
+                    help="Override an engine's default model, e.g. --model openai=chat-latest.")
     a = ap.parse_args()
     brand = json.load(open(a.brand))
     prompts = json.load(open(a.prompts))
+    models = parse_models(a.model)
+    if models is None:
+        json.dump({"status": "error", "error": {"code": "INVALID_MODEL_OVERRIDE",
+                   "message": "Use --model ENGINE=MODEL_ID with ENGINE one of " + ", ".join(MODELS) + "."}},
+                  sys.stdout); sys.exit(1)
     terms = [brand["name"]] + brand.get("aliases", [])
     domains = brand.get("domains", [])
     keymap = {"openai": "OPENAI_API_KEY", "anthropic": "ANTHROPIC_API_KEY",
@@ -107,7 +136,7 @@ def main():
     for e in engines:
         cells, mentioned, linked, sents = [], 0, 0, {"positive": 0, "neutral": 0, "negative": 0}
         for p in prompts:
-            status, text, citations = call_engine(e, p)
+            status, text, citations = call_engine(e, p, models[e])
             if status == 429:
                 cells.append({"prompt": p, "status": "rate_limited"}); continue
             if status != 200:
@@ -131,7 +160,8 @@ def main():
         per_engine[e] = {"cells": cells, "presence_rate": round(mentioned / n, 3),
                          "link_rate": round(linked / n, 3), "sentiment": sents}
     json.dump({"status": "ok", "brand": brand["name"], "engines": list(per_engine.keys()),
-               "skipped_engines": skipped, "results": per_engine}, sys.stdout, indent=2)
+               "models": {e: models[e] for e in per_engine}, "skipped_engines": skipped,
+               "results": per_engine}, sys.stdout, indent=2)
 
 
 if __name__ == "__main__":
