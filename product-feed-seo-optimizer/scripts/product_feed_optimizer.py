@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-"""Product Feed SEO Optimizer — reference implementation.
+"""Product Feed SEO Optimizer: reference implementation.
 
 Audits a Google Merchant product feed for title quality, attribute
 completeness, and GTIN/identifier validity (real GS1 mod-10 check digit),
 generates recommended Product JSON-LD, cross-checks Merchant Center
-disapprovals via the Content API for Shopping, and rewrites titles to a
-demand-informed pattern — returning a per-product diff plus schema fixes that
+disapprovals via the Merchant API (products v1), and rewrites titles to a
+demand-informed pattern, returning a per-product diff plus schema fixes that
 serve both organic and Shopping.
 
-Auth:   keyless for the feed. Optional: CONTENT_API_ACCESS_TOKEN with --merchant-id.
+Auth:   keyless for the feed. Optional: MERCHANT_API_ACCESS_TOKEN (OAuth, content
+        scope) with --merchant-id; an existing CONTENT_API_ACCESS_TOKEN also works.
 Output: JSON on stdout per ../references/output.schema.json. Std-lib only.
 
 Usage:
@@ -20,7 +21,11 @@ import argparse, csv, json, os, re, sys, time
 import urllib.request, urllib.error, urllib.parse
 from collections import Counter
 
-CONTENT_API = "https://shoppingcontent.googleapis.com/content/v2.1/{mid}/productstatuses"
+# Merchant API, products sub-API v1. It replaces the Content API for Shopping,
+# which Google sunset on 2026-08-18: since 2026-09-01 its requests can fail with
+# HTTP 410 Gone, and it shuts down fully in early 2027.
+MERCHANT_API = "https://merchantapi.googleapis.com/products/v1/accounts/{mid}/products"
+STATUS_PAGE_SIZE = 1000  # the API's maximum page size
 REQUIRED = ["id", "title", "description", "link", "image_link", "availability", "price", "condition"]
 APPAREL_HINTS = ("apparel", "clothing", "shoes", "footwear", "accessories")
 APPAREL_REQUIRED = ["color", "size", "gender", "age_group"]
@@ -69,17 +74,41 @@ def load_feed(path, max_products):
     return products[:max_products]
 
 
+def product_keys(product):
+    """The ids a feed row may use for a Merchant API product: its offer id, and
+    the product id in its resource name (accounts/1/products/en~US~sku1 gives
+    en~US~sku1)."""
+    keys = []
+    if product.get("offerId"):
+        keys.append(product["offerId"])
+    name = product.get("name") or ""
+    if "/products/" in name:
+        keys.append(name.split("/products/", 1)[1])
+    return keys
+
+
+def disapproved_issues(product):
+    """The product's item-level issues that disapprove it (severity DISAPPROVED)."""
+    status = product.get("productStatus") or {}
+    return [{"code": it.get("code"), "severity": it.get("severity"),
+             "attribute": it.get("attribute"), "description": it.get("description")}
+            for it in status.get("itemLevelIssues", [])
+            if it.get("severity") == "DISAPPROVED"]
+
+
 def fetch_disapprovals(merchant_id, max_pages):
-    token = os.environ.get("CONTENT_API_ACCESS_TOKEN")
+    # The Merchant API takes the same OAuth scope (content) as the old Content
+    # API, so a token minted for it keeps working.
+    token = os.environ.get("MERCHANT_API_ACCESS_TOKEN") or os.environ.get("CONTENT_API_ACCESS_TOKEN")
     if not token:
-        fail("AUTH_MISSING_CONTENT_API", "--merchant-id set but CONTENT_API_ACCESS_TOKEN is unset.")
-    base = CONTENT_API.format(mid=urllib.parse.quote(str(merchant_id), safe=""))
+        fail("AUTH_MISSING_MERCHANT_API", "--merchant-id set but MERCHANT_API_ACCESS_TOKEN is unset.")
+    base = MERCHANT_API.format(mid=urllib.parse.quote(str(merchant_id), safe=""))
     by_id = {}
     page_token = None
     pages = 0
     while pages < max_pages:
         pages += 1
-        params = {"maxResults": 250}
+        params = {"pageSize": STATUS_PAGE_SIZE}
         if page_token:
             params["pageToken"] = page_token
         url = base + "?" + urllib.parse.urlencode(params)
@@ -92,33 +121,32 @@ def fetch_disapprovals(merchant_id, max_pages):
                 break
             except urllib.error.HTTPError as e:
                 if e.code in (401, 403):
-                    fail("AUTH_CONTENT_API_FORBIDDEN", "Content API token invalid or lacks access to merchant %s." % merchant_id)
+                    fail("AUTH_MERCHANT_API_FORBIDDEN", "Merchant API token invalid or lacks access to merchant %s." % merchant_id)
                 if e.code == 429:
                     if attempt >= MAX_BACKOFF:
-                        fail("RATE_LIMITED", "Content API quota exhausted.")
+                        fail("RATE_LIMITED", "Merchant API quota exhausted.")
                     time.sleep(2 ** attempt)
                     continue
                 if e.code >= 500 and attempt < 3:
                     time.sleep(2 ** attempt)
                     continue
-                fail("REQUEST_FAILED", "Content API HTTP %s." % e.code)
+                fail("REQUEST_FAILED", "Merchant API HTTP %s." % e.code)
             except Exception:
                 if attempt < 3:
                     time.sleep(2 ** attempt)
                     continue
-                fail("REQUEST_FAILED", "Content API request failed.")
+                fail("REQUEST_FAILED", "Merchant API request failed.")
         else:
-            fail("RATE_LIMITED", "Content API unavailable after retries.")
-        for res in data.get("resources", []):
-            pid = res.get("productId", "")
-            offer = pid.split(":")[-1] if pid else ""
-            issues = [{"code": it.get("code"), "servability": it.get("servability"),
-                       "description": it.get("description")}
-                      for it in res.get("itemLevelIssues", [])
-                      if it.get("servability") == "disapproved"]
-            if issues:
-                by_id[offer] = issues
-                by_id[pid] = issues
+            fail("RATE_LIMITED", "Merchant API unavailable after retries.")
+        for product in data.get("products", []):
+            issues = disapproved_issues(product)
+            if not issues:
+                continue
+            # One offer id can sit under several feed labels or languages
+            # (en~US~sku1, en~CA~sku1), so merge their issues per key.
+            for key in product_keys(product):
+                merged = by_id.setdefault(key, [])
+                merged.extend(i for i in issues if i not in merged)
         page_token = data.get("nextPageToken")
         if not page_token:
             break
@@ -301,7 +329,7 @@ def main():
         "status": "ok",
         "products_audited": n,
         "demand_informed": bool(volumes),
-        "disapprovals_source": "content_api" if args.merchant_id else "none",
+        "disapprovals_source": "merchant_api" if args.merchant_id else "none",
         "invalid_gtins": invalid_gtins,
         "missing_identifiers": missing_ids,
         "products_disapproved": disapproved,

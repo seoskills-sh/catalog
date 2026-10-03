@@ -7,7 +7,7 @@
     "status": { "enum": ["ok", "error"] },
     "products_audited": { "type": "integer" },
     "demand_informed": { "type": "boolean" },
-    "disapprovals_source": { "enum": ["content_api", "none"] },
+    "disapprovals_source": { "enum": ["merchant_api", "none"] },
     "invalid_gtins": { "type": "integer" },
     "missing_identifiers": { "type": "integer" },
     "products_disapproved": { "type": "integer" },
@@ -37,7 +37,8 @@
       "type": "object",
       "properties": {
         "code": { "type": ["string", "null"] },
-        "servability": { "type": ["string", "null"] },
+        "severity": { "type": ["string", "null"] },
+        "attribute": { "type": ["string", "null"] },
         "description": { "type": ["string", "null"] }
       }
     },
