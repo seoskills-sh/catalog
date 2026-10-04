@@ -54,7 +54,7 @@
           }
         },
         "opportunity_captured": { "type": "number" },
-        "opportunity_source": { "enum": ["aso_api", "metadata", "none"] },
+        "opportunity_source": { "enum": ["file", "metadata", "none"] },
         "coverage": {
           "type": "object",
           "properties": {

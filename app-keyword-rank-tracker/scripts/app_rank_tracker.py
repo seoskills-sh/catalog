@@ -1,24 +1,30 @@
 #!/usr/bin/env python3
-"""App Keyword Rank Tracker — reference implementation.
+"""App Keyword Rank Tracker: reference implementation.
 
 Records an app's keyword positions across the App Store (keyless iTunes
-Search) and Google Play (ASO rank API), across locales, and — stateful via
---previous — reports movers, newly ranking / lost keywords, velocity, and
-volatility. Returns an honest baseline on the first run instead of fabricated
-deltas.
+Search) and Google Play (ranks you export from your ASO tool as a CSV), across
+locales, and, stateful via --previous, reports movers, newly ranking and lost
+keywords, velocity, and volatility. Returns an honest baseline on the first run
+instead of fabricated deltas.
 
-Auth:   App Store search needs no key. Google Play ranks require ASO_API_KEY.
+Auth:   none. Google Play has no free rank API, so its ranks come from --play-ranks.
 Output: JSON on stdout per ../references/output.schema.json. Std-lib only.
 
-Usage: python3 app_rank_tracker.py --app-id 6001112223 --package com.acme.budget \
-       --keywords keywords.json --locales us,gb [--previous prev.json]
+Usage: python3 app_rank_tracker.py --app-id 6001112223 --keywords keywords.json \
+       --locales us,gb [--play-ranks play_ranks.csv] [--previous prev.json]
 """
 from __future__ import annotations
-import argparse, datetime, json, math, os, sys, time
+import argparse, csv, datetime, json, math, sys, time
 import urllib.request, urllib.error, urllib.parse
 
 SEARCH = "https://itunes.apple.com/search"
-ASO_RANK = "https://api.asokeyword.io/v1/rank"
+# Apple limits the iTunes Search API to about 20 calls a minute and answers
+# with 403 beyond that, so App Store lookups are paced at one per 3.1 seconds.
+SEARCH_PACING = 3.1
+# Column names accepted in a --play-ranks export (lowercased), first match wins.
+KEYWORD_COLS = ("keyword", "term", "search term", "query")
+LOCALE_COLS = ("locale", "country", "storefront", "market")
+RANK_COLS = ("rank", "position", "ranking")
 
 
 def fail(code, message, **extra):
@@ -43,9 +49,7 @@ def get_json(url, headers=None, timeout=45):
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 return r.getcode(), json.loads(r.read() or b"{}")
         except urllib.error.HTTPError as exc:
-            if exc.code == 401:
-                fail("AUTH_EXPIRED", "ASO_API_KEY rejected.")
-            if exc.code == 429:
+            if exc.code in (403, 429):  # Apple signals its rate limit with 403
                 return 429, {}
             if exc.code >= 500 and attempt < 3:
                 time.sleep(2 ** attempt)
@@ -72,17 +76,51 @@ def rank_appstore(app_id, kw, locale, limit):
     return None, "not_found"
 
 
-def rank_play(pkg, kw, locale, key, limit):
-    q = urllib.parse.urlencode({"package": pkg, "term": kw, "country": locale, "limit": limit})
-    code, data = get_json(ASO_RANK + "?" + q, {"Authorization": "Bearer %s" % key})
-    if code == 429:
-        return None, "rate_limited"
-    if code != 200:
-        return None, "error"
-    r = data.get("rank")
-    if isinstance(r, int) and r > 0:
-        return r, "ok"
-    return None, "not_found"
+def read_csv(path, label):
+    """Rows of a CSV export as dicts keyed by lowercased, trimmed column names."""
+    try:
+        with open(path, newline="", encoding="utf-8-sig") as fh:
+            sample = fh.read(4096)
+            fh.seek(0)
+            try:
+                dialect = csv.Sniffer().sniff(sample, delimiters=",;\t")
+            except csv.Error:
+                dialect = csv.excel
+            rows = list(csv.DictReader(fh, dialect=dialect))
+    except FileNotFoundError:
+        fail("INPUT_MISSING", "%s not found: %s" % (label, path))
+    except (OSError, UnicodeDecodeError, csv.Error) as exc:
+        fail("INPUT_INVALID", "%s not readable: %s" % (label, exc))
+    return [{(k or "").strip().lower(): v.strip() for k, v in row.items() if isinstance(v, str)} for row in rows]
+
+
+def pick(row, names):
+    return next((row[n] for n in names if row.get(n)), "")
+
+
+def load_play_ranks(path):
+    """{(keyword, locale): rank or None} from an ASO tool's Google Play export.
+    A blank, zero or non-numeric rank means not ranked; a missing row means no data."""
+    ranks = {}
+    for row in read_csv(path, "play-ranks"):
+        kw, loc = pick(row, KEYWORD_COLS).lower(), pick(row, LOCALE_COLS).lower()
+        if not kw or not loc:
+            continue
+        raw = pick(row, RANK_COLS).replace("#", "")
+        rank = int(float(raw)) if raw.replace(".", "", 1).isdigit() and float(raw) >= 1 else None
+        ranks[(kw, loc)] = rank
+    if not ranks:
+        fail("INPUT_INVALID", "play-ranks has no rows with keyword and locale columns "
+             "(accepted names: %s; %s)." % ("/".join(KEYWORD_COLS), "/".join(LOCALE_COLS)))
+    return ranks
+
+
+def rank_play(play_ranks, kw, locale):
+    key = (kw.lower(), locale.lower())
+    if key not in play_ranks:
+        return None, "no_data"
+    rank = play_ranks[key]
+    return (rank, "ok") if rank else (None, "not_found")
 
 
 def pstdev(xs):
@@ -103,7 +141,9 @@ def velocity(hist_ranks, out):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--app-id", dest="app_id")
-    ap.add_argument("--package")
+    ap.add_argument("--package", help="Google Play package name, reported with the Play ranks.")
+    ap.add_argument("--play-ranks", dest="play_ranks",
+                    help="CSV export of Google Play ranks (keyword, locale, rank columns).")
     ap.add_argument("--keywords", required=True)
     ap.add_argument("--locales", default="us")
     ap.add_argument("--stores", default="appstore,play")
@@ -117,11 +157,13 @@ def main():
 
     stores = [s.strip() for s in args.stores.split(",") if s.strip()]
     locales = [l.strip() for l in args.locales.split(",") if l.strip()]
-    key = os.environ.get("ASO_API_KEY")
-    if "play" in stores and args.package and not key:
-        fail("AUTH_MISSING_ASO_KEY", "Set ASO_API_KEY for Google Play ranks, or drop 'play' from --stores.")
-    if not (("appstore" in stores and args.app_id) or ("play" in stores and args.package)):
-        fail("INPUT_MISSING", "Provide --app-id for App Store and/or --package for Google Play.")
+    if not (("appstore" in stores and args.app_id) or ("play" in stores and args.play_ranks)):
+        fail("INPUT_MISSING", "Provide --app-id for App Store ranks and/or --play-ranks for Google Play ranks.")
+    warnings = []
+    if "play" in stores and not args.play_ranks:
+        warnings.append("Google Play skipped: it has no free rank API, so pass its ranks with --play-ranks "
+                        "(a CSV export from your ASO tool).")
+    play_ranks = load_play_ranks(args.play_ranks) if "play" in stores and args.play_ranks else {}
 
     keywords = load_json(args.keywords, "keywords")
     if not isinstance(keywords, list) or not keywords:
@@ -134,11 +176,11 @@ def main():
         for t in load_json(args.previous, "previous").get("snapshot", {}).get("tracked", []):
             prev_tracked[t["key"]] = t
 
-    tracked, rate_limited = [], False
+    tracked, incomplete = [], False
     plan = []
     if "appstore" in stores and args.app_id:
         plan += [("appstore", loc) for loc in locales]
-    if "play" in stores and args.package and key:
+    if play_ranks:
         plan += [("play", loc) for loc in locales]
 
     for kw in keywords:
@@ -146,12 +188,14 @@ def main():
             key_id = "%s|%s|%s" % (kw, store, loc)
             if store == "appstore":
                 rank, state = rank_appstore(args.app_id, kw, loc, args.limit)
+                time.sleep(SEARCH_PACING)
             else:
-                rank, state = rank_play(args.package, kw, loc, key, args.limit)
+                rank, state = rank_play(play_ranks, kw, loc)
             prev = prev_tracked.get(key_id)
             prev_hist = prev.get("history", []) if prev else []
-            if state == "rate_limited":
-                rate_limited = True
+            if state in ("rate_limited", "error", "no_data"):
+                # No reading this run: carry the history forward, never a fabricated point.
+                incomplete = incomplete or state != "no_data"
                 tracked.append({"key": key_id, "keyword": kw, "store": store, "locale": loc,
                                 "rank": (prev_hist[-1]["rank"] if prev_hist else None),
                                 "state": "stale", "history": prev_hist})
@@ -169,7 +213,6 @@ def main():
                 "best_rank": min(numeric) if numeric else None,
                 "history": hist,
             })
-            time.sleep(0.3)
 
     persist = {"snapshot": {"date": args.date,
                             "tracked": [{"key": t["key"], "keyword": t["keyword"], "store": t["store"],
@@ -180,7 +223,7 @@ def main():
                      "rank": t.get("rank"), "state": t.get("state", "ok")} for t in tracked]
         json.dump({"status": "baseline", "date": args.date,
                    "message": "First run: ranks recorded, no deltas computed. Re-run to get movement.",
-                   "keywords_tracked": len(tracked), "positions": baseline, **persist},
+                   "keywords_tracked": len(tracked), "positions": baseline, "warnings": warnings, **persist},
                   sys.stdout, indent=2)
         return
 
@@ -214,7 +257,7 @@ def main():
                   "best_rank": t.get("best_rank")} for t in tracked]
 
     json.dump({
-        "status": "partial" if rate_limited else "ok",
+        "status": "partial" if incomplete else "ok",
         "date": args.date,
         "keywords_tracked": len(tracked),
         "stale_count": sum(1 for t in tracked if t.get("state") == "stale"),
@@ -224,6 +267,7 @@ def main():
         "lost": lost,
         "volatility_leaders": volatile[:20],
         "out_of_results_convention": OUT,
+        "warnings": warnings,
         **persist,
     }, sys.stdout, indent=2)
 

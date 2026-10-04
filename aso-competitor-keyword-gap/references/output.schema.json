@@ -6,7 +6,8 @@
   "properties": {
     "status": { "enum": ["ok", "error"] },
     "country": { "type": "string" },
-    "keyword_source": { "enum": ["aso_api", "derived_metadata"] },
+    "keyword_source": { "enum": ["file", "derived_metadata", "mixed"] },
+    "ranks_measured": { "type": "integer", "description": "Terms whose App Store ranks were measured with the iTunes Search API." },
     "target": {
       "type": "object",
       "properties": {
