@@ -7,12 +7,17 @@
     "status": { "enum": ["ok", "error"] },
     "weighting": { "enum": ["mention", "citation", "first_mention"] },
     "engines": { "type": "array", "items": { "type": "string" } },
+    "models": { "type": "object", "additionalProperties": { "type": "string" } },
     "skipped_engines": {
       "type": "array",
       "items": { "type": "object", "properties": { "engine": { "type": "string" }, "reason": { "type": "string" } } }
     },
     "answered_cells": { "type": "integer" },
     "total_cells": { "type": "integer" },
+    "failed_cells": {
+      "type": "object",
+      "additionalProperties": { "type": "object", "additionalProperties": { "type": "integer" } }
+    },
     "per_engine_sov": {
       "type": "object",
       "additionalProperties": { "type": "object", "additionalProperties": { "type": "number" } }
