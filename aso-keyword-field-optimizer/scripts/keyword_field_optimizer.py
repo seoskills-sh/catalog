@@ -1,23 +1,26 @@
 #!/usr/bin/env python3
-"""ASO Keyword Field Optimizer — reference implementation.
+"""ASO Keyword Field Optimizer: reference implementation.
 
 Packs the iOS 100-char keyword field (and validates subtitle overlap) per
 locale: tokenizes title/subtitle/keyword-field, strips cross-field and
 stop-word waste, dedupes across localizations, and greedily fills the highest
 opportunity terms without repeating any word already indexed elsewhere.
 
-Auth:   ASO_API_KEY (OPTIONAL, only for --enrich volume/difficulty lookups).
+Auth:   none. There is no free source of App Store search volume, so volume and
+        difficulty come from --metadata or a --volumes CSV from your ASO tool.
 Input:  --metadata local JSON (per-locale listing + candidate terms).
 Output: JSON on stdout per ../references/output.schema.json. Std-lib only.
 
-Usage: python3 keyword_field_optimizer.py --metadata listing.json [--enrich]
+Usage: python3 keyword_field_optimizer.py --metadata listing.json [--volumes volumes.csv]
 """
 from __future__ import annotations
-import argparse, json, os, re, sys, time
-import urllib.request, urllib.error, urllib.parse
+import argparse, csv, json, re, sys
 
-ASO_BASE = "https://api.asokeyword.io/v1/keywords"
 KW_LIMIT = 100  # Apple iOS keyword field hard cap (characters)
+# Column names accepted in a --volumes export (lowercased), first match wins.
+TERM_COLS = ("term", "keyword", "search term", "query")
+VOLUME_COLS = ("volume", "search volume", "popularity", "search popularity", "traffic")
+DIFFICULTY_COLS = ("difficulty", "keyword difficulty", "kd", "competition")
 
 # Apple ignores these in the keyword field; including them wastes characters.
 STOP_WORDS = {
@@ -68,30 +71,41 @@ def combinations(n):
     return n + (n * (n - 1)) // 2
 
 
-def enrich(term, country, key, timeout=30):
-    q = urllib.parse.urlencode({"term": term, "country": country})
-    req = urllib.request.Request(ASO_BASE + "?" + q, headers={"Authorization": "Bearer %s" % key})
-    for attempt in range(6):
-        try:
-            with urllib.request.urlopen(req, timeout=timeout) as r:
-                data = json.loads(r.read())
-                return data.get("volume"), data.get("difficulty")
-        except urllib.error.HTTPError as exc:
-            if exc.code == 429:
-                if attempt == 5:
-                    return None, None
-                time.sleep(2 ** attempt)
-                continue
-            if exc.code >= 500 and attempt < 3:
-                time.sleep(2 ** attempt)
-                continue
-            return None, None
-        except Exception:
-            if attempt < 3:
-                time.sleep(2 ** attempt)
-                continue
-            return None, None
-    return None, None
+def number(raw):
+    """A numeric cell from a spreadsheet export ("12,400", "35%", "") or None."""
+    cleaned = (raw or "").replace(",", "").replace("%", "").strip()
+    try:
+        return float(cleaned) if cleaned else None
+    except ValueError:
+        return None
+
+
+def load_volumes(path):
+    """{term lowercased: (volume, difficulty)} from an ASO tool's CSV export."""
+    try:
+        with open(path, newline="", encoding="utf-8-sig") as fh:
+            sample = fh.read(4096)
+            fh.seek(0)
+            try:
+                dialect = csv.Sniffer().sniff(sample, delimiters=",;\t")
+            except csv.Error:
+                dialect = csv.excel
+            rows = list(csv.DictReader(fh, dialect=dialect))
+    except FileNotFoundError:
+        fail("INPUT_MISSING", "volumes file not found: %s" % path)
+    except (OSError, UnicodeDecodeError, csv.Error) as exc:
+        fail("INPUT_INVALID", "volumes not readable: %s" % exc)
+    volumes = {}
+    for row in rows:
+        row = {(k or "").strip().lower(): v.strip() for k, v in row.items() if isinstance(v, str)}
+        term = next((row[c] for c in TERM_COLS if row.get(c)), "").lower()
+        vol = number(next((row[c] for c in VOLUME_COLS if row.get(c)), ""))
+        if term and vol is not None:
+            volumes[term] = (vol, number(next((row[c] for c in DIFFICULTY_COLS if row.get(c)), "")))
+    if not volumes:
+        fail("INPUT_INVALID", "volumes has no rows with a term and a numeric volume (accepted columns: %s; %s)."
+             % ("/".join(TERM_COLS), "/".join(VOLUME_COLS)))
+    return volumes
 
 
 def opportunity(volume, difficulty):
@@ -101,26 +115,23 @@ def opportunity(volume, difficulty):
     return round(volume / (diff + 10.0), 4)
 
 
-def build_candidates(loc, country, do_enrich, key, budget):
+def build_candidates(loc, volumes):
     """Return {token: best_opportunity_or_None}, first-seen order, and source."""
     cand, order, seen = {}, {}, 0
-    used_api, used_meta = False, False
+    used_file, used_meta = False, False
     raw = list(loc.get("candidates", []))
     # Retain current keyword field words as unranked candidates (do not lose them).
     for kw in [x for x in re.split(r"[,\n]", loc.get("current_keywords", "")) if x.strip()]:
         raw.append({"term": kw.strip()})
-    lookups = 0
     for c in raw:
         term = c.get("term", "")
         vol, diff = c.get("volume"), c.get("difficulty")
         if vol is not None:
             used_meta = True
-        if do_enrich and vol is None and lookups < budget:
-            vol, diff = enrich(term, country, key)
-            lookups += 1
-            if vol is not None:
-                used_api = True
-            time.sleep(0.2)
+        elif term.strip().lower() in volumes:
+            vol, file_diff = volumes[term.strip().lower()]
+            diff = diff if diff is not None else file_diff
+            used_file = True
         opp = opportunity(vol, diff)
         for tok in tokens_of(term):
             if tok not in order:
@@ -130,14 +141,14 @@ def build_candidates(loc, country, do_enrich, key, budget):
                 cand[tok] = opp
             else:
                 cand.setdefault(tok, None)
-    src = "aso_api" if used_api else ("metadata" if used_meta else "none")
-    return cand, order, src, lookups
+    src = "file" if used_file else ("metadata" if used_meta else "none")
+    return cand, order, src
 
 
-def optimize_locale(loc, global_placed, country, do_enrich, key, budget):
+def optimize_locale(loc, global_placed, volumes):
     covered = content_tokens(loc.get("title", "")) | content_tokens(loc.get("subtitle", ""))
     brand = content_tokens(loc.get("title", ""))
-    cand, order, src, lookups = build_candidates(loc, country, do_enrich, key, budget)
+    cand, order, src = build_candidates(loc, volumes)
 
     ranked = sorted(cand.keys(), key=lambda t: (-(cand[t] if cand[t] is not None else 0.0), order[t]))
     placed, dropped, captured = [], [], 0.0
@@ -181,21 +192,16 @@ def optimize_locale(loc, global_placed, country, do_enrich, key, budget):
         "coverage": coverage,
         "brand_tokens_excluded": sorted(brand),
     }
-    return result, before_tokens, after_tokens, lookups
+    return result, before_tokens, after_tokens
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--metadata", required=True)
-    ap.add_argument("--country", default="us")
-    ap.add_argument("--enrich", action="store_true", help="Look up missing volume/difficulty via ASO_API_KEY.")
-    ap.add_argument("--max-lookups", type=int, default=60, dest="max_lookups")
+    ap.add_argument("--volumes", help="CSV export of search volume (and difficulty) per term from your ASO tool.")
     args = ap.parse_args()
 
-    key = os.environ.get("ASO_API_KEY")
-    if args.enrich and not key:
-        fail("AUTH_MISSING_ASO_KEY", "Set ASO_API_KEY to use --enrich, or drop the flag for offline mode.")
-
+    volumes = load_volumes(args.volumes) if args.volumes else {}
     meta = load_json(args.metadata, "metadata")
     locales = meta.get("locales", [])
     if not locales:
@@ -203,11 +209,10 @@ def main():
 
     ordered = sorted(locales, key=lambda l: l.get("priority", 99))
     global_placed, results = set(), []
-    tot_before, tot_after, budget = set(), set(), args.max_lookups
+    tot_before, tot_after = set(), set()
     dup_removed, sources = 0, set()
     for loc in ordered:
-        res, before, after, used = optimize_locale(loc, global_placed, args.country, args.enrich, key, budget)
-        budget -= used
+        res, before, after = optimize_locale(loc, global_placed, volumes)
         results.append(res)
         tot_before |= before
         tot_after |= after
@@ -218,7 +223,8 @@ def main():
     status = "ok"
     if sources == {"none"} or (len(sources) == 1 and "none" in sources):
         status = "insufficient"
-        warnings.append("No volume/difficulty data available; tokens ranked by input order, not opportunity.")
+        warnings.append("No volume/difficulty data available; tokens ranked by input order, not opportunity. "
+                        "Add volumes to the candidates or pass --volumes (a CSV export from your ASO tool).")
     over = [r["locale"] for r in results if r["char_count"] > KW_LIMIT]
     if over:
         warnings.append("Keyword field exceeded 100 chars for: %s (should not happen)." % ", ".join(over))

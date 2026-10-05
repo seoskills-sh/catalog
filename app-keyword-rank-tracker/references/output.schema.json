@@ -10,6 +10,7 @@
     "keywords_tracked": { "type": "integer" },
     "stale_count": { "type": "integer" },
     "out_of_results_convention": { "type": "integer" },
+    "warnings": { "type": "array", "items": { "type": "string" } },
     "positions": {
       "type": "array",
       "items": { "$ref": "#/$defs/position" }
