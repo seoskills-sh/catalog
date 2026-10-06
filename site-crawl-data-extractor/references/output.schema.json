@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Site Crawl Data Extractor Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "origin": { "type": "string" },
+    "crawled": { "type": "string", "format": "date-time" },
+    "pages": { "type": "integer" },
+    "ok_pages": { "type": "integer" },
+    "statuses": { "type": "object", "additionalProperties": { "type": "integer" } },
+    "skipped": { "type": "object", "additionalProperties": { "type": "integer" } },
+    "delay_seconds": { "type": "number" },
+    "fields": { "type": "array", "items": { "type": "string" } },
+    "fill_rates": { "type": "object", "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 } },
+    "out": { "type": ["string", "null"] },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "status"],
+        "properties": {
+          "url": { "type": "string" },
+          "status": { "type": "integer" },
+          "final_url": { "type": "string" },
+          "title": { "type": "string" },
+          "meta_description": { "type": "string" },
+          "h1": { "type": ["string", "null"] },
+          "canonical": { "type": ["string", "null"] },
+          "robots": { "type": "string" },
+          "lang": { "type": ["string", "null"] },
+          "published": { "type": ["string", "null"] },
+          "modified": { "type": ["string", "null"] },
+          "author": { "type": ["string", "null"] },
+          "words": { "type": "integer" },
+          "schema_types": { "type": "string" },
+          "internal_links": { "type": "integer" },
+          "external_links": { "type": "integer" },
+          "images": { "type": "integer" },
+          "excerpt": { "type": "string" },
+          "tables": { "type": "array", "items": { "type": "array", "items": { "type": "array", "items": { "type": "string" } } } }
+        },
+        "additionalProperties": true
+      }
+    },
+    "rows_in_output": { "type": "integer" },
+    "notes": { "type": "array", "items": { "type": "string" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}
