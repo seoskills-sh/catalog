@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI Search Optimizer Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "checked": { "type": "string", "format": "date" },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "status"],
+        "properties": {
+          "url": { "type": "string" },
+          "status": { "enum": ["ok", "unreachable"] },
+          "http_status": { "type": "integer" },
+          "final_url": { "type": "string" },
+          "title": { "type": "string" },
+          "h1": { "type": "string" },
+          "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "scores": {
+            "type": "object",
+            "properties": {
+              "extractability": { "type": "integer", "minimum": 0, "maximum": 20 },
+              "quotability": { "type": "integer", "minimum": 0, "maximum": 20 },
+              "authority": { "type": "integer", "minimum": 0, "maximum": 20 },
+              "freshness": { "type": "integer", "minimum": 0, "maximum": 20 },
+              "entity_clarity": { "type": "integer", "minimum": 0, "maximum": 20 }
+            }
+          },
+          "eligibility": {
+            "type": "object",
+            "properties": {
+              "noindex": { "type": "boolean" },
+              "nosnippet": { "type": "boolean" },
+              "max_snippet": { "type": ["integer", "null"] }
+            }
+          },
+          "measures": {
+            "type": "object",
+            "properties": {
+              "words": { "type": "integer" },
+              "first_paragraph_words": { "type": "integer" },
+              "headings": { "type": "integer" },
+              "question_headings": { "type": "integer" },
+              "long_paragraphs": { "type": "integer" },
+              "lists_and_tables": { "type": "integer" },
+              "statistic_sentences": { "type": "integer" },
+              "definition_sentences": { "type": "integer" },
+              "external_citations": { "type": "integer" },
+              "schema_types": { "type": "array", "items": { "type": "string" } },
+              "newest_date": { "type": ["string", "null"] },
+              "days_since_update": { "type": ["integer", "null"] },
+              "author_in_schema": { "type": "boolean" },
+              "author_visible": { "type": "boolean" }
+            }
+          },
+          "findings": { "type": "array", "items": { "type": "string" } },
+          "query_fit": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "query": { "type": "string" },
+                "title": { "type": "number" },
+                "h1": { "type": "number" },
+                "first_paragraph": { "type": "number" },
+                "best_heading": { "type": "number" },
+                "body": { "type": "number" }
+              }
+            }
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["priority", "action"],
+              "properties": {
+                "priority": { "enum": ["critical", "high", "medium", "low"] },
+                "action": { "type": "string" }
+              }
+            }
+          },
+          "rewrite_targets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["kind", "current"],
+              "properties": {
+                "kind": { "enum": ["answer_first", "question_heading", "split_paragraph"] },
+                "current": { "type": "string" }
+              }
+            }
+          },
+          "examples": {
+            "type": "object",
+            "properties": {
+              "statistic_sentences": { "type": "array", "items": { "type": "string" } },
+              "definition_sentences": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "domains": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "robots_txt_found": { "type": "boolean" },
+          "search_crawlers_blocked": { "type": "array", "items": { "type": "string" } },
+          "ai_crawlers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "crawler": { "type": "string" },
+                "vendor": { "type": "string" },
+                "purpose": { "enum": ["search", "user", "training"] },
+                "allowed": { "type": "boolean" },
+                "blocked_paths": { "type": "array", "items": { "type": "string" } },
+                "what_blocking_means": { "type": "string" }
+              }
+            }
+          },
+          "llms_txt_found": { "type": "boolean" }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}

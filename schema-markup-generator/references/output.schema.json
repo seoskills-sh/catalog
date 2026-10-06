@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Schema Markup Generator Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "generated": { "type": "string", "format": "date" },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "status"],
+        "properties": {
+          "url": { "type": "string" },
+          "status": { "enum": ["ok", "unreachable"] },
+          "http_status": { "type": "integer" },
+          "detected_type": { "type": "string" },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "recommendation": { "enum": ["add", "keep_existing_and_fix", "replace"] },
+          "existing": {
+            "type": "object",
+            "properties": {
+              "jsonld_blocks": { "type": "integer" },
+              "types": { "type": "array", "items": { "type": "string" } },
+              "microdata": { "type": "boolean" },
+              "rdfa": { "type": "boolean" },
+              "issues": { "type": "array", "items": { "$ref": "#/definitions/issue" } }
+            }
+          },
+          "facts": { "type": "object" },
+          "jsonld": {
+            "type": "object",
+            "required": ["@context", "@graph"],
+            "properties": { "@context": { "const": "https://schema.org" }, "@graph": { "type": "array", "items": { "type": "object" } } }
+          },
+          "placeholders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": { "path": { "type": "string" }, "needs": { "type": "string" }, "required": { "type": "boolean" } }
+            }
+          },
+          "to_confirm": { "type": "array", "items": { "type": "string" } },
+          "generated_checks": { "type": "array", "items": { "$ref": "#/definitions/issue" } },
+          "google_rich_result": { "type": ["boolean", "null"] },
+          "rich_result_note": { "type": ["string", "null"] },
+          "ready": { "type": "boolean" },
+          "snippet": { "type": "string" }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "definitions": {
+    "issue": {
+      "type": "object",
+      "required": ["code"],
+      "properties": {
+        "block": { "type": "integer" },
+        "path": { "type": "string" },
+        "type": { "type": "string" },
+        "code": {
+          "enum": ["INVALID_JSON", "NO_CONTEXT", "NO_TYPE", "MISSING_REQUIRED", "RELATIVE_URL", "INVALID_DATE", "PLACEHOLDER_TEXT", "PRICE_NOT_VISIBLE", "SELF_SERVING_REVIEW", "NO_GOOGLE_RICH_RESULT"]
+        },
+        "detail": { "type": "string" },
+        "count": { "type": "integer" }
+      }
+    }
+  }
+}
