@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "On-Page SEO Fixer Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "status"],
+        "properties": {
+          "url": { "type": "string" },
+          "status": { "enum": ["ok", "unreachable"] },
+          "http_status": { "type": "integer" },
+          "final_url": { "type": "string" },
+          "keyword": { "type": ["string", "null"] },
+          "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "area_scores": {
+            "type": "object",
+            "properties": {
+              "metadata": { "type": "number" },
+              "headings": { "type": "number" },
+              "content": { "type": "number" },
+              "links": { "type": "number" },
+              "images": { "type": "number" },
+              "technical": { "type": "number" }
+            }
+          },
+          "page": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "title_chars": { "type": "integer" },
+              "meta_description": { "type": "string" },
+              "meta_description_chars": { "type": "integer" },
+              "h1": { "type": "array", "items": { "type": "string" } },
+              "headings": { "type": "array", "items": { "type": "object", "properties": { "level": { "type": "integer" }, "text": { "type": "string" } } } },
+              "words": { "type": "integer" },
+              "flesch_reading_ease": { "type": ["number", "null"] },
+              "canonical": { "type": ["string", "null"] },
+              "robots": { "type": "string" },
+              "lang": { "type": ["string", "null"] },
+              "internal_links": { "type": "integer" },
+              "external_links": { "type": "integer" },
+              "images": { "type": "integer" },
+              "images_missing_alt": { "type": "integer" },
+              "schema_types": { "type": "array", "items": { "type": "string" } },
+              "hreflang": { "type": "integer" }
+            }
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["area", "code", "severity", "fix"],
+              "properties": {
+                "area": { "enum": ["metadata", "headings", "content", "links", "images", "technical"] },
+                "code": { "type": "string" },
+                "severity": { "enum": ["critical", "high", "medium", "low"] },
+                "detail": { "type": "string" },
+                "fix": { "type": "string" },
+                "snippet": { "type": "string" }
+              }
+            }
+          },
+          "broken_links": { "type": "array", "items": { "type": "object", "properties": { "url": { "type": "string" }, "status": { "type": "integer" } } } },
+          "heavy_images": { "type": "array", "items": { "type": "object", "properties": { "src": { "type": "string" }, "kb": { "type": "integer" } } } }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}
