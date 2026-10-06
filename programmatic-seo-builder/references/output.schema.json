@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Programmatic SEO Builder Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "generated": { "type": "string", "format": "date" },
+    "dry_run": { "type": "boolean" },
+    "input": {
+      "type": "object",
+      "properties": {
+        "rows": { "type": "integer" },
+        "columns": { "type": "array", "items": { "type": "string" } },
+        "body_fields": { "type": "array", "items": { "type": "string" } },
+        "required_fields": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "pages": { "type": "integer" },
+        "pass": { "type": "integer" },
+        "hold": { "type": "integer" },
+        "hubs": { "type": "integer" },
+        "thin_hubs": { "type": "array", "items": { "type": "string" } },
+        "holds_by_reason": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "warnings_by_code": { "type": "object", "additionalProperties": { "type": "integer" } }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "properties": {
+        "min_unique": { "type": "number" },
+        "warn_unique": { "type": "number" },
+        "min_completeness": { "type": "number" },
+        "min_words": { "type": "integer" }
+      }
+    },
+    "uniqueness": {
+      "type": ["object", "null"],
+      "properties": { "min": { "type": "number" }, "median": { "type": "number" }, "max": { "type": "number" } }
+    },
+    "near_duplicate_check": { "type": "string" },
+    "rollout": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "batch": { "type": "integer" }, "pages": { "type": "integer" } } }
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["row", "slug", "title", "status"],
+        "properties": {
+          "row": { "type": "integer" },
+          "slug": { "type": "string" },
+          "title": { "type": "string" },
+          "status": { "enum": ["pass", "hold"] },
+          "hold_reasons": {
+            "type": "array",
+            "items": { "enum": ["MISSING_REQUIRED", "SPARSE_DATA", "DUPLICATE_SLUG", "DUPLICATE_TITLE", "NEAR_DUPLICATE_RECORD", "BOILERPLATE_DOMINANT"] }
+          },
+          "warnings": {
+            "type": "array",
+            "items": { "enum": ["SHORT_PAGE", "TITLE_LONG", "NO_DESCRIPTION", "DESCRIPTION_LONG", "SLUG_LONG", "LOW_UNIQUE_SHARE"] }
+          },
+          "words": { "type": "integer" },
+          "unique_share": { "type": ["number", "null"] },
+          "completeness": { "type": "number" },
+          "batch": { "type": ["integer", "null"] },
+          "related": { "type": "integer" },
+          "missing_fields": { "type": "array", "items": { "type": "string" } },
+          "duplicate_of_row": { "type": "integer" },
+          "near_duplicate_of_row": { "type": "integer" }
+        }
+      }
+    },
+    "pages_listed": { "type": "integer" },
+    "files": {
+      "type": ["object", "null"],
+      "properties": {
+        "out": { "type": "string" },
+        "written": { "type": "integer" },
+        "manifest": { "type": "string" },
+        "sitemap": { "type": ["string", "null"] }
+      }
+    },
+    "notes": { "type": "array", "items": { "type": "string" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}
