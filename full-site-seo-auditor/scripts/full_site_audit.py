@@ -383,13 +383,14 @@ def audit_page(url, groups, in_sitemap):
 
 
 def run_psi(url):
-    params = {"url": url, "strategy": "mobile", "category": "performance"}
-    if os.environ.get("PSI_API_KEY"):
-        params["key"] = os.environ["PSI_API_KEY"]
+    key = os.environ.get("PSI_API_KEY")
+    if not key:  # PageSpeed Insights refuses requests without a key (HTTP 429, quota 0)
+        return {"status": "unavailable", "note": "Set PSI_API_KEY (a free Google Cloud key with the PageSpeed Insights API enabled)."}
+    params = {"url": url, "strategy": "mobile", "category": "performance", "key": key}
     res = fetch(PSI + "?" + urllib.parse.urlencode(params), timeout=90)
     if res["status"] != 200:
         return {"status": "unavailable", "http_status": res["status"],
-                "note": "PageSpeed Insights quota or error; set PSI_API_KEY for a dedicated quota."}
+                "note": "PageSpeed Insights returned an error (invalid key, quota, or the page failed to load in Lighthouse)."}
     try:
         data = json.loads(res["body"])
     except ValueError:
