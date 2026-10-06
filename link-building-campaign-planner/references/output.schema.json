@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Link-Building Campaign Planner Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "site": { "type": "string" },
+    "checked": { "type": "string", "format": "date" },
+    "assets": {
+      "type": "object",
+      "properties": {
+        "pages_read": { "type": "integer" },
+        "found": { "type": "integer" },
+        "by_type": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "top": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "url": { "type": "string" },
+              "title": { "type": "string" },
+              "type": { "enum": ["tool", "original data", "template or checklist", "glossary or definition", "visual", "in-depth guide"] },
+              "words": { "type": "integer" },
+              "statistics": { "type": "integer" },
+              "tables": { "type": "integer" },
+              "linkability": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "tactic": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "prospects": {
+      "type": "object",
+      "properties": {
+        "domains": { "type": "integer" },
+        "skipped": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "by_type": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "multi_competitor": { "type": "integer" },
+        "top": { "type": "array", "items": { "$ref": "#/definitions/prospect" } },
+        "by_segment": { "type": "object", "additionalProperties": { "type": "array", "items": { "$ref": "#/definitions/prospect" } } }
+      }
+    },
+    "tracking_sheet": { "type": ["string", "null"] },
+    "notes": { "type": "array", "items": { "type": "string" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "definitions": {
+    "prospect": {
+      "type": "object",
+      "properties": {
+        "domain": { "type": "string" },
+        "type": { "type": "string" },
+        "tactic": { "type": "string" },
+        "score": { "type": "number" },
+        "links_to_competitors": { "type": "integer" },
+        "authority": { "type": ["number", "null"] },
+        "dofollow": { "type": "boolean" },
+        "first_seen": { "type": ["string", "null"] },
+        "relevance": { "type": ["number", "null"] },
+        "example_pages": { "type": "array", "items": { "type": "object" } },
+        "suggested_asset": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "App Listing Optimizer Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "store": { "enum": ["ios", "play"] },
+    "country": { "type": "string" },
+    "checked": { "type": "string", "format": "date" },
+    "limits": { "type": "object", "additionalProperties": { "type": "integer" } },
+    "app": { "$ref": "#/definitions/listing" },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "severity", "fix"],
+        "properties": {
+          "code": { "type": "string" },
+          "severity": { "enum": ["critical", "high", "medium", "low"] },
+          "detail": { "type": "string" },
+          "fix": { "type": "string" }
+        }
+      }
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "keyword": { "type": "string" },
+          "title": { "type": "boolean" },
+          "subtitle": { "type": "boolean" },
+          "short_description": { "type": "boolean" },
+          "description": { "type": "boolean" },
+          "description_mentions": { "type": "integer" }
+        }
+      }
+    },
+    "competitors": { "type": "array", "items": { "$ref": "#/definitions/listing" } },
+    "keyword_ideas_from_competitors": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "word": { "type": "string" }, "used_by": { "type": "array", "items": { "type": "string" } } } }
+    },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "definitions": {
+    "listing": {
+      "type": "object",
+      "required": ["status", "id"],
+      "properties": {
+        "status": { "enum": ["ok", "not_found", "unreachable", "rate_limited"] },
+        "store": { "enum": ["ios", "play"] },
+        "id": { "type": "string" },
+        "url": { "type": "string" },
+        "title": { "type": "string" },
+        "subtitle": { "type": ["string", "null"] },
+        "subtitle_found": { "type": "boolean" },
+        "short_description": { "type": "string" },
+        "description_chars": { "type": "integer" },
+        "description_opening": { "type": "string" },
+        "developer": { "type": ["string", "null"] },
+        "category": { "type": ["string", "null"] },
+        "rating": { "type": ["number", "null"] },
+        "ratings_count": { "type": ["integer", "null"] },
+        "downloads": { "type": ["string", "null"] },
+        "version": { "type": ["string", "null"] },
+        "last_updated": { "type": ["string", "null"] },
+        "days_since_update": { "type": "integer" },
+        "price": { "type": ["string", "null"] },
+        "screenshots": { "type": "integer" },
+        "ipad_screenshots": { "type": "integer" },
+        "supports_ipad": { "type": "boolean" },
+        "languages": { "type": "integer" },
+        "video": { "type": "boolean" },
+        "contains_ads": { "type": "boolean" },
+        "in_app_purchases": { "type": "boolean" },
+        "content_rating": { "type": ["string", "null"] },
+        "issue_codes": { "type": "array", "items": { "type": "string" } },
+        "http_status": { "type": "integer" }
+      }
+    }
+  }
+}
