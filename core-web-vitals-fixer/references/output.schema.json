@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Core Web Vitals Fixer Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "source"],
+        "properties": {
+          "url": { "type": "string" },
+          "source": { "enum": ["pagespeed_insights", "lighthouse_file", "html_only"] },
+          "strategy": { "type": ["string", "null"] },
+          "psi_error": {
+            "type": "object",
+            "properties": { "http_status": { "type": "integer" }, "message": { "type": "string" } }
+          },
+          "field": {
+            "type": ["object", "null"],
+            "properties": {
+              "scope": { "enum": ["url", "origin", null] },
+              "overall": { "type": ["string", "null"] },
+              "passes_core_web_vitals": { "type": ["boolean", "null"] },
+              "metrics": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": { "p75": { "type": "number" }, "rating": { "enum": ["good", "needs-improvement", "poor", null] } }
+                }
+              }
+            }
+          },
+          "diagnosis": {
+            "type": ["object", "null"],
+            "properties": {
+              "lab": { "type": "object" },
+              "performance_score": { "type": "integer" },
+              "lighthouse_version": { "type": ["string", "null"] },
+              "form_factor": { "type": ["string", "null"] },
+              "lcp": {
+                "type": "object",
+                "properties": {
+                  "element": { "type": "object" },
+                  "phases": { "type": "array", "items": { "type": "object", "properties": { "phase": { "type": "string" }, "ms": { "type": "number" } } } },
+                  "biggest_phase": { "type": "object" },
+                  "discovery": { "type": "object" }
+                }
+              },
+              "fixes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["audit", "metric", "fix"],
+                  "properties": {
+                    "audit": { "type": "string" },
+                    "metric": { "enum": ["LCP", "INP", "CLS", "FCP"] },
+                    "title": { "type": ["string", "null"] },
+                    "display": { "type": ["string", "null"] },
+                    "estimated_savings_ms": { "type": "number" },
+                    "estimated_cls_savings": { "type": "number" },
+                    "fix": { "type": "string" },
+                    "top_items": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              },
+              "third_parties": { "type": "array", "items": { "type": "object" } },
+              "layout_shifts": { "type": "array", "items": { "type": "object" } }
+            }
+          },
+          "html": {
+            "type": ["object", "null"],
+            "properties": {
+              "status": { "enum": ["ok", "unreachable"] },
+              "html_kb": { "type": "integer" },
+              "elements": { "type": "integer" },
+              "images": { "type": "integer" },
+              "head_stylesheets": { "type": "integer" },
+              "preconnects": { "type": "integer" },
+              "third_party_script_hosts": { "type": "integer" },
+              "findings": { "type": "array", "items": { "type": "object" } }
+            }
+          }
+        }
+      }
+    },
+    "thresholds": { "type": "object" },
+    "notes": { "type": "array", "items": { "type": "string" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}

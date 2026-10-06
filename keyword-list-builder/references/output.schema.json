@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Keyword List Builder Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "seeds": { "type": "array", "items": { "type": "string" } },
+    "country": { "type": "string" },
+    "language": { "type": "string" },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "keywords": { "type": "integer" },
+        "returned": { "type": "integer" },
+        "autocomplete_requests": { "type": "integer" },
+        "by_intent": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "by_action": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "with_volume": { "type": "integer" }
+      }
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["keyword", "intent", "action", "priority"],
+        "properties": {
+          "keyword": { "type": "string" },
+          "intent": { "enum": ["informational", "commercial", "transactional", "navigational"] },
+          "sub_intent": { "type": "string" },
+          "content_type": { "type": "string" },
+          "tier": { "enum": ["head", "body", "long-tail"] },
+          "action": { "enum": ["create", "update existing page", "fix CTR", "consolidate", "maintain", "brand page", "comparison page"] },
+          "priority": { "type": "number", "minimum": 0, "maximum": 100 },
+          "cluster": { "type": "string" },
+          "sources": { "type": "array", "items": { "enum": ["seed", "autocomplete", "volumes", "gsc"] } },
+          "volume": { "type": "number" },
+          "difficulty": { "type": "number" },
+          "cpc": { "type": "number" },
+          "gsc": {
+            "type": "object",
+            "properties": {
+              "clicks": { "type": "number" },
+              "impressions": { "type": "number" },
+              "position": { "type": ["number", "null"] },
+              "pages": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "clusters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "primary": { "type": "string" },
+          "intent": { "type": "string" },
+          "size": { "type": "integer" },
+          "keywords": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "quick_wins": { "type": "array", "items": { "type": "string" } },
+    "ctr_gaps": { "type": "array", "items": { "type": "string" } },
+    "cannibalization": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "keyword": { "type": "string" }, "pages": { "type": "array", "items": { "type": "string" } } } }
+    },
+    "notes": { "type": "array", "items": { "type": "string" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}
