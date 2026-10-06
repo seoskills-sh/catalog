@@ -16,6 +16,7 @@ Usage:
       --gsc-links-csv top_linking_sites.csv [--previous prev.json] [--max-domains 5000]
 """
 from __future__ import annotations
+import utils.session
 import argparse, csv, json, os, sys, time
 import urllib.request, urllib.error, urllib.parse
 from collections import defaultdict

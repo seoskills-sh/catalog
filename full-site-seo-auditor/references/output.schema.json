@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Full-Site SEO Auditor Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "site": { "type": "string" },
+    "pages_audited": { "type": "integer" },
+    "discovered_via": { "enum": ["sitemap", "crawl"] },
+    "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "area_scores": { "type": "object", "additionalProperties": { "type": "number" } },
+    "area_max": { "type": "object", "additionalProperties": { "type": "number" } },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "area", "severity", "fix"],
+        "properties": {
+          "code": { "type": "string" },
+          "area": { "enum": ["crawlability", "indexability", "on_page", "content", "structured_data", "security_mobile", "performance"] },
+          "severity": { "enum": ["critical", "high", "medium", "low"] },
+          "pages_affected": { "type": ["integer", "null"] },
+          "site_wide": { "type": "boolean" },
+          "example_urls": { "type": "array", "items": { "type": "string" } },
+          "fix": { "type": "string" }
+        }
+      }
+    },
+    "quick_wins": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "code": { "type": "string" }, "fix": { "type": "string" } } }
+    },
+    "robots": {
+      "type": "object",
+      "properties": {
+        "found": { "type": "boolean" },
+        "sitemaps_listed": { "type": "array", "items": { "type": "string" } },
+        "googlebot_allowed_root": { "type": ["boolean", "null"] }
+      }
+    },
+    "sitemap": {
+      "type": "object",
+      "properties": {
+        "files_read": { "type": "array", "items": { "type": "string" } },
+        "urls_found": { "type": "integer" },
+        "fully_audited": { "type": "boolean" }
+      }
+    },
+    "psi": { "type": ["object", "null"] },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "status", "issues"],
+        "properties": {
+          "url": { "type": "string" },
+          "status": { "type": "integer" },
+          "final_url": { "type": "string" },
+          "seconds": { "type": "number" },
+          "redirects": { "type": "integer" },
+          "title": { "type": "string" },
+          "title_chars": { "type": "integer" },
+          "meta_description_chars": { "type": "integer" },
+          "h1_count": { "type": "integer" },
+          "words": { "type": "integer" },
+          "canonical": { "type": ["string", "null"] },
+          "noindex": { "type": "boolean" },
+          "schema_types": { "type": "array", "items": { "type": "string" } },
+          "issues": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "limits": { "type": "object" },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}

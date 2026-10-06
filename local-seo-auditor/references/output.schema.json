@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Local SEO Auditor Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "site": { "type": "string" },
+    "checked": { "type": "string", "format": "date" },
+    "business": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["storefront", "service_area"] },
+        "profiles": { "type": "integer" },
+        "location_pages": { "type": "integer" },
+        "canonical_nap": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "phone": { "type": "string" },
+            "address": { "$ref": "#/definitions/address" },
+            "source": { "enum": ["flags", "profile", "website"] }
+          }
+        }
+      }
+    },
+    "score": { "type": ["integer", "null"], "minimum": 0, "maximum": 100 },
+    "area_scores": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "score": { "type": ["number", "null"] },
+          "max": { "type": "number" },
+          "assessed": { "type": "boolean" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["area", "code", "severity", "fix"],
+        "properties": {
+          "area": { "enum": ["website", "gbp", "reviews", "citations"] },
+          "code": { "type": "string" },
+          "severity": { "enum": ["critical", "high", "medium", "low"] },
+          "detail": { "type": "string" },
+          "fix": { "type": "string" },
+          "pages": { "type": "array", "items": { "type": "string" } },
+          "cost": { "type": "number" }
+        }
+      }
+    },
+    "website": {
+      "type": "object",
+      "properties": {
+        "pages_audited": { "type": "integer" },
+        "pages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "url": { "type": "string" },
+              "kind": { "enum": ["home", "index", "location", "contact", "other"] },
+              "status": { "type": "integer" },
+              "reachable": { "type": "boolean" },
+              "title": { "type": "string" },
+              "h1": { "type": "string" },
+              "phones": { "type": "array", "items": { "type": "string" } },
+              "addresses": { "type": "array", "items": { "$ref": "#/definitions/address" } },
+              "schema": { "type": "array", "items": { "type": "object" } },
+              "click_to_call": { "type": "boolean" },
+              "map": { "type": "boolean" },
+              "hours": { "type": "boolean" },
+              "service_area_text": { "type": "boolean" },
+              "unique_share": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "gbp": {
+      "type": ["object", "null"],
+      "properties": {
+        "profiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "store_code": { "type": "string" },
+              "name": { "type": "string" },
+              "matched_page": { "type": ["string", "null"] },
+              "nap_check": { "type": "object", "additionalProperties": { "enum": ["match", "partial", "mismatch", "unknown"] } },
+              "website_ok": { "type": "boolean" },
+              "hours": { "type": "boolean" },
+              "primary_category": { "type": "string" },
+              "additional_categories": { "type": "string" },
+              "category_on_site": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "reviews": {
+      "type": ["object", "null"],
+      "properties": {
+        "count": { "type": "integer" },
+        "average": { "type": ["number", "null"] },
+        "last_30_days": { "type": "integer" },
+        "last_90_days": { "type": "integer" },
+        "days_since_last": { "type": ["integer", "null"] },
+        "response_rate": { "type": ["number", "null"] },
+        "by_rating": { "type": "object" },
+        "by_platform": { "type": "object" }
+      }
+    },
+    "citations": {
+      "type": ["object", "null"],
+      "properties": {
+        "listings": { "type": "integer" },
+        "consistent": { "type": "integer" },
+        "mismatches": { "type": "array", "items": { "type": "object" } },
+        "duplicates": { "type": "array", "items": { "type": "string" } },
+        "core_missing": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "notes": { "type": "array", "items": { "type": "string" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "definitions": {
+    "address": {
+      "type": ["object", "null"],
+      "properties": {
+        "street": { "type": "string" },
+        "city": { "type": "string" },
+        "region": { "type": "string" },
+        "postal": { "type": "string" }
+      }
+    }
+  }
+}
