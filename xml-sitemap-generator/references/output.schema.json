@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "XML Sitemap Generator and Auditor Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "mode": { "enum": ["audit", "generate"] },
+    "site": { "type": "string" },
+    "checked": { "type": "string", "format": "date" },
+    "robots_txt": {
+      "type": "object",
+      "properties": { "found": { "type": "boolean" }, "sitemaps_listed": { "type": "array", "items": { "type": "string" } } }
+    },
+    "sitemaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": { "type": "string" },
+          "status": { "type": "integer" },
+          "type": { "enum": ["urlset", "sitemapindex", null] },
+          "urls": { "type": "integer" },
+          "bytes": { "type": "integer" }
+        }
+      }
+    },
+    "urls_listed": { "type": "integer" },
+    "sample": {
+      "type": "object",
+      "properties": {
+        "size": { "type": "integer" },
+        "clean": { "type": "integer" },
+        "clean_share": { "type": ["number", "null"] },
+        "estimated_clean_urls": { "type": ["integer", "null"] }
+      }
+    },
+    "lastmod": {
+      "type": "object",
+      "properties": { "with_lastmod": { "type": "integer" }, "distinct_values": { "type": "integer" } }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "severity", "count", "fix"],
+        "properties": {
+          "code": { "type": "string" },
+          "severity": { "enum": ["critical", "high", "medium", "low", "info"] },
+          "count": { "type": "integer" },
+          "share_of_sample": { "type": "number" },
+          "examples": { "type": "array", "items": { "type": "string" } },
+          "fix": { "type": "string" },
+          "scope": { "enum": ["listed", "sample"] }
+        }
+      }
+    },
+    "sample_results": { "type": "array", "items": { "type": "object" } },
+    "source": { "enum": ["crawl", "url_list"] },
+    "inspected": { "type": "integer" },
+    "included": { "type": "integer" },
+    "with_lastmod": { "type": "integer" },
+    "excluded": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": { "count": { "type": "integer" }, "examples": { "type": "array", "items": { "type": "string" } } }
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": { "file": { "type": "string" }, "urls": { "type": "integer" }, "bytes": { "type": "integer" } }
+      }
+    },
+    "index": { "type": ["string", "null"] },
+    "out": { "type": "string" },
+    "robots_txt_line": { "type": "string" },
+    "robots_txt_already_lists": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "array", "items": { "type": "string" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}

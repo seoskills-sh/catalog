@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Comparison Page Builder Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "type": { "enum": ["vs", "alternatives", "roundup"] },
+    "subject": { "type": "string" },
+    "read": { "type": "string", "format": "date" },
+    "products": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "url", "status"],
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string" },
+          "status": { "enum": ["ok", "unreachable"] },
+          "http_status": { "type": "integer" },
+          "read": { "type": "string" },
+          "pages": { "type": "object", "additionalProperties": { "type": "string" } },
+          "facts": {
+            "type": "object",
+            "properties": {
+              "positioning": {
+                "type": "object",
+                "properties": { "title": { "type": "string" }, "description": { "type": "string" }, "h1": { "type": "string" }, "source": { "type": "string" } }
+              },
+              "pricing": {
+                "type": "object",
+                "properties": {
+                  "source": { "type": ["string", "null"] },
+                  "plans": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "plan": { "type": "string" },
+                        "amount": { "type": "number" },
+                        "currency": { "type": "string" },
+                        "period": { "type": ["string", "null"] },
+                        "per_seat": { "type": "boolean" },
+                        "monthly_equivalent": { "type": ["number", "null"] },
+                        "text": { "type": "string" }
+                      }
+                    }
+                  },
+                  "lowest_paid_monthly": { "type": ["number", "null"] },
+                  "currency": { "type": ["string", "null"] },
+                  "free_plan": { "type": "boolean" },
+                  "free_trial_days": { "type": ["integer", "boolean", "null"] },
+                  "custom_pricing": { "type": "boolean" },
+                  "found_in_html": { "type": "boolean" },
+                  "blocked_status": { "type": ["integer", "null"] }
+                }
+              },
+              "features": {
+                "type": "object",
+                "properties": { "source": { "type": "string" }, "items": { "type": "array", "items": { "type": "string" } } }
+              },
+              "integrations_claim": { "type": ["object", "null"] },
+              "customers_claim": { "type": ["object", "null"] }
+            }
+          }
+        }
+      }
+    },
+    "pricing_summary": { "type": "array", "items": { "type": "object" } },
+    "feature_checklist": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "feature": { "type": "string" },
+          "products": {
+            "type": "object",
+            "additionalProperties": {
+              "type": ["object", "null"],
+              "properties": { "page": { "type": "string" }, "text": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "feature_matrix": {
+      "type": "object",
+      "properties": {
+        "shared": { "type": "array", "items": { "type": "object" } },
+        "differs": { "type": "array", "items": { "type": "object" } },
+        "rows": { "type": "integer" }
+      }
+    },
+    "people_also_compare": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "query_suffix": { "type": "string" }, "count": { "type": "integer" } } }
+    },
+    "questions": { "type": "array", "items": { "type": "string" } },
+    "page_plan": {
+      "type": "object",
+      "properties": {
+        "target_keywords": { "type": "array", "items": { "type": "string" } },
+        "title_options": { "type": "array", "items": { "type": "string" } },
+        "outline": { "type": "array", "items": { "type": "string" } },
+        "schema": { "type": "string" },
+        "disclosure_needed": { "type": "boolean" }
+      }
+    },
+    "verification_needed": { "type": "array", "items": { "type": "string" } },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  }
+}

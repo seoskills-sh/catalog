@@ -19,9 +19,9 @@ Answer "what is wrong with this site's SEO, and what should we fix first?" with 
 - `sitemap` (OPTIONAL): a sitemap URL to use instead of the one robots.txt lists.
 - `psi` (OPTIONAL flag): add Google PageSpeed Insights (mobile) for the homepage.
 
-## DATA SOURCES (no keys needed)
+## DATA SOURCES (no keys needed, except for the optional --psi)
 1. The site itself: robots.txt, the XML sitemap (indexes are followed), and each page's HTML and response headers, fetched as `seoskills-full-site-auditor/1.0`.
-2. `--psi` calls the PageSpeed Insights API keyless, which shares a small quota. Set env `PSI_API_KEY` for your own quota. IF the call fails THEN `psi.status="unavailable"` and the audit continues.
+2. `--psi` calls the PageSpeed Insights API, which needs env `PSI_API_KEY` (a free Google Cloud API key with the PageSpeed Insights API enabled; Google refuses keyless requests). IF the key is missing or the call fails THEN `psi.status="unavailable"` with the reason, and the audit continues.
 
 ## EXPECTED TOOL CALLS
 - Run `scripts/full_site_audit.py --site https://example.com [--max-pages 50] [--psi]`.

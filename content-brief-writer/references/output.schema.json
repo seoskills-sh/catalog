@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Content Brief Writer Output",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "keyword": { "type": "string" },
+    "checked": { "type": "string", "format": "date" },
+    "serp": {
+      "type": "object",
+      "properties": {
+        "source": { "enum": ["serpapi", "urls"] },
+        "features": { "type": "array", "items": { "type": "string" } },
+        "related_searches": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "properties": {
+        "format": { "type": "string" },
+        "format_votes": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "word_count_range": { "type": "array", "items": { "type": "integer" }, "minItems": 2, "maxItems": 2 },
+        "median_words": { "type": "integer" },
+        "ymyl": { "type": "boolean" },
+        "freshness_matters": { "type": "boolean" },
+        "media": { "type": "object" },
+        "schema_types_seen": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "title_length_limit": { "type": "integer" },
+        "meta_description_limit": { "type": "integer" }
+      }
+    },
+    "outline": {
+      "type": "object",
+      "properties": {
+        "must_cover": { "type": "array", "items": { "$ref": "#/definitions/subtopic" } },
+        "should_cover": { "type": "array", "items": { "$ref": "#/definitions/subtopic" } },
+        "unique_angles": { "type": "array", "items": { "$ref": "#/definitions/subtopic" } }
+      }
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": { "type": "string" },
+          "sources": { "type": "array", "items": { "enum": ["people_also_ask", "autocomplete", "competitor_heading"] } },
+          "pages_answering": { "type": "integer" }
+        }
+      }
+    },
+    "common_terms": {
+      "type": "array",
+      "items": { "type": "object", "properties": { "term": { "type": "string" }, "pages": { "type": "integer" } } }
+    },
+    "site": {
+      "type": ["object", "null"],
+      "properties": {
+        "existing_pages_for_keyword": { "type": "array", "items": { "type": "string" } },
+        "internal_link_candidates": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "competitors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "status"],
+        "properties": {
+          "url": { "type": "string" },
+          "status": { "enum": ["ok", "unreachable"] },
+          "http_status": { "type": "integer" },
+          "final_url": { "type": "string" },
+          "title": { "type": "string" },
+          "h1": { "type": "string" },
+          "meta_description": { "type": "string" },
+          "words": { "type": "integer" },
+          "format": { "type": "string" },
+          "h2_count": { "type": "integer" },
+          "questions": { "type": "array", "items": { "type": "string" } },
+          "images": { "type": "integer" },
+          "tables": { "type": "integer" },
+          "lists": { "type": "integer" },
+          "videos": { "type": "integer" },
+          "external_links": { "type": "integer" },
+          "schema_types": { "type": "array", "items": { "type": "string" } },
+          "newest_date": { "type": ["string", "null"] },
+          "has_author": { "type": "boolean" }
+        }
+      }
+    },
+    "pages_analyzed": { "type": "integer" },
+    "error": {
+      "type": "object",
+      "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+    }
+  },
+  "definitions": {
+    "subtopic": {
+      "type": "object",
+      "properties": {
+        "heading": { "type": "string" },
+        "level": { "enum": ["h2", "h3"] },
+        "coverage": { "type": "number" },
+        "pages": { "type": "integer" },
+        "typical_position": { "type": "number" },
+        "variants": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}
